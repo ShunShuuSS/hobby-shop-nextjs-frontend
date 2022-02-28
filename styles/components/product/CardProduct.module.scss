@@ -1,0 +1,59 @@
+.card {
+    box-shadow: 0 0 10px rgb(180, 180, 180);
+    border-radius: 7px;
+    width: 100%;
+    height: 17vw;
+    object-fit: fill;
+
+    .card_image {
+        width: 100%;
+        height: 9vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 7px;
+        object-fit: cover;
+
+        .image {
+            border-radius: 7px 7px 0 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .card_body {
+        margin: 5px;
+        height: 8vw;
+
+        .title {
+            margin: 0;
+            font-size: 13px;
+            word-wrap: break-word;
+            line-height: 15px;
+            height: 30px;
+
+            @supports (-webkit-line-clamp: 2) {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: initial;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+        }
+
+        .price {
+            font-size: 16px;
+        }
+
+        .location {
+            font-size: 12px;
+        }
+
+        .rating {
+            font-size: 12px;
+        }
+    }
+
+}

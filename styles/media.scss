@@ -1,0 +1,49 @@
+$breakpoint-mobile-s: 320px;
+$breakpoint-mobile-m: 375px;
+$breakpoint-mobile-l: 425px;
+$breakpoint-tablet: 768px;
+$breakpoint-laptop: 1024px;
+$breakpoint-laptop-l: 1440px;
+$breakpoint-4k: 2560px;
+
+@mixin responsive-mobile-s {
+    @media (max-width: #{$breakpoint-mobile-s - 0.5}) {
+        @content;
+    }
+}
+
+@mixin responsive-mobile-m {
+    @media (min-width: #{$breakpoint-mobile-s - 0.5}) and (max-width: #{$breakpoint-mobile-m - 0.5}) {
+        @content;
+    }
+}
+
+@mixin responsive-mobile-l {
+    @media (min-width: #{$breakpoint-mobile-m - 0.5}) and (max-width: #{$breakpoint-mobile-l - 0.5}) {
+        @content;
+    }
+}
+
+@mixin responsive-tablet {
+    @media (min-width: #{$breakpoint-mobile-l - 0.5}) and (max-width: #{$breakpoint-tablet - 0.5}) {
+        @content;
+    }
+}
+
+@mixin responsive-tablet {
+    @media (min-width: #{$breakpoint-tablet - 0.5}) and (max-width: #{$breakpoint-laptop - 0.5}) {
+        @content;
+    }
+}
+
+@mixin responsive-tablet {
+    @media (min-width: #{$breakpoint-laptop - 0.5}) and (max-width: #{$breakpoint-laptop-l - 0.5}) {
+        @content;
+    }
+}
+
+@mixin responsive-tablet {
+    @media (min-width: #{$breakpoint-laptop-l - 0.5}) and (max-width: #{$breakpoint-4k - 0.5}) {
+        @content;
+    }
+}

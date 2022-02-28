@@ -1,5 +1,45 @@
 .container {
-  padding: 0 2rem;
+  padding: 0 12vw;
+  padding-top: 4vh;
+  position: relative;
+  z-index: 0;
+
+  .slide_show {
+    position: relative;
+    width: 100%;
+    padding: 5vh 0;
+
+
+    .card_slide_show {
+      width: 100%;
+      height: 20vw;
+      object-fit: cover;
+
+      .image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 1rem;
+      }
+    }
+  }
+
+  .row {
+    margin: auto;
+
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    .col {
+      float: left;
+      width: 16.6666667%;
+      padding: 10px;
+      height: 300px;
+    }
+  }
 }
 
 .main {

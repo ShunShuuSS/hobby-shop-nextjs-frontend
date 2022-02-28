@@ -1,0 +1,313 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  // NavigationBar.Components
+  .navigation-bar {
+    @apply fixed flex z-[1] p-[0_10vw] list-none w-full h-[3.5rem] shadow-[2px_2px_10px_#ececec] overflow-hidden bg-white;
+    .logo_content {
+      @apply m-[auto_0] float-left;
+
+      .logo {
+        // @apply hover:bg-[#bdbdbd];
+      }
+    }
+
+    .search-bar {
+      @apply m-auto p-[auto];
+
+      .search-bar-input {
+        @apply border w-[35vw] h-[2.5rem] rounded-sm text-[15px] px-1;
+      }
+    }
+
+    .cart {
+      @apply w-auto float-right m-auto;
+
+      .img {
+        @apply h-[3rem] float-right;
+      }
+    }
+
+    .profile {
+      @apply w-auto my-auto float-right;
+
+      .img {
+        @apply h-[3rem] float-right;
+      }
+    }
+  }
+
+  // Card.Product.Components
+  .card-product {
+    @apply shadow-md h-[15rem] rounded;
+
+    .img {
+      @apply object-cover h-[8rem] rounded-t-md w-full;
+    }
+
+    .body {
+      @apply m-1;
+      .title {
+        @apply text-[13px] break-words whitespace-normal overflow-hidden webkit-box webkit-box-vertical webkit-line-clamp-2 text-ellipsis;
+      }
+
+      .price {
+        @apply text-[16px];
+      }
+
+      .location {
+        @apply text-[12px];
+      }
+
+      .rating {
+        @apply text-[12px];
+      }
+    }
+  }
+
+  .container-page {
+    @apply w-full p-[5rem_10vw] z-0 mobile-s:p-[5rem_10vw] tablet:p-[5rem_10vw] laptop:p-[6rem_10vw];
+  }
+
+  // index.jsx
+  .slide-show {
+    @apply relative w-auto pb-[3rem];
+
+    .card-slide-show {
+      @apply w-auto bg-gray-200 object-cover border rounded-md mobile-s:h-[12rem] mobile-xl:h-[15rem] tablet:h-[18rem] laptop:h-[22rem];
+
+      .img {
+        @apply m-auto h-full object-cover rounded-md;
+      }
+    }
+  }
+
+  .product-list-index {
+    @apply grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-6;
+  }
+
+  // [id_store]/index.jsx
+  .store {
+    @apply border rounded-xl w-auto mobile-s:m-auto tablet:w-4/5 laptop:w-3/5 laptop:m-0 laptop-l:w-2/3;
+    .card {
+      @apply m-5 flex;
+      .img {
+        @apply w-[8rem] border rounded-xl object-cover mr-5 mobile-s:h-[5rem] mobile-s:w-[5rem] mobile-l:h-[8rem] mobile-l:w-[8rem];
+      }
+
+      .body {
+        // @apply m-auto;
+        .store-name {
+          @apply text-[22px] mobile-s:text-[20px] mobile-xl:text-[25px] tablet:text-[30px];
+          .rating {
+            @apply mobile-s:block laptop:inline;
+          }
+        }
+
+        .store-location {
+          @apply mobile-s:text-[17px] mobile-xl:text-[20px];
+        }
+
+        .store-info {
+          @apply border-2 rounded-md w-[6rem] text-center bg-[#00B4D8];
+          .btn {
+            @apply m-2;
+          }
+        }
+      }
+    }
+  }
+
+  // [id_store]/[id_product].jsx
+  .product-page {
+    @apply block w-full;
+    .head-product {
+      @apply 
+      mobile-s:block
+      tablet:flex;
+
+      .product-img{
+        @apply w-1/3 mr-5;
+        .img {
+          @apply
+          mobile-l:h-[13rem] mobile-l:w-[13rem]
+          tablet:h-[20rem] tablet:w-[20rem]
+          object-cover rounded-xl;
+        }
+
+        .swiper {
+          margin-left:0;
+          margin-right:0;
+          width: auto;
+          height: auto;
+        }
+
+        .swiper-slide {
+          background: #fff;
+
+          /* Center slide text vertically */
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: -webkit-flex;
+          display: flex;
+          -webkit-box-pack: center;
+          -ms-flex-pack: center;
+          -webkit-justify-content: center;
+          justify-content: center;
+          -webkit-box-align: center;
+          -ms-flex-align: center;
+          -webkit-align-items: center;
+          align-items: center;
+        }
+      }
+
+      .body {
+        @apply m-0;
+
+        .title {
+          @apply
+          mobile-xl:text-[20px]
+          tablet:text-[27px]
+          laptop:text-[30px];
+        }
+
+        .rating {
+          @apply text-[15px];
+        }
+
+        hr {
+          @apply border-[#c0c0c0] border-solid;
+        }
+
+        .price {
+          @apply mobile-xl:text-[25px] tablet:text-[32px] laptop:text-[35px];
+        }
+      }
+    }
+    
+
+    .body-product{
+      @apply block mt-[2rem];
+      .title{
+        @apply text-[25px];
+      }
+      .detail-product{
+        @apply text-justify;
+      }
+    }
+
+    .product-etc{
+      @apply mt-[3rem];
+      .title-product-etc{
+        @apply text-[20px] my-[2rem];
+      }
+
+      .swiper {
+        width: 100%;
+        height: 100%;
+      }
+
+      .swiper-slide {
+        font-size: 18px;
+        background: #fff;
+
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+      }
+      .swiper-button-prev{
+        @apply left-0 flex;
+      }
+
+      .swiper-button-next{
+        @apply right-0 flex;
+      }
+    }
+  }
+
+  // cart.jsx
+  .cart-page{
+    @apply w-auto flex justify-between;
+    .cart-product-section{
+      @apply block w-[65%];
+    }
+    .cart-padding{
+      @apply p-[2vw];
+    }
+    .cart-price-details-section{
+      @apply w-[30%];
+    }
+  }
+
+  .parent {
+    background-color: #000;
+    height: 10px;
+
+    .child {
+      height: 200px;
+      background-color: #ccc;
+      width: 10%;
+      float: right;
+      position: relative;
+    }
+
+    .child2{
+      height: 20px;
+      background-color: #ccc;
+      width: 10%;
+      float: left;
+      position: relative;
+    }
+  }
+}
+
+
+
+
+
+@layer utilities {
+  .webkit-box {
+    display: -webkit-box;
+  }
+
+  .webkit-box-vertical {
+    -webkit-box-orient: vertical;
+  }
+
+  .webkit-line-clamp-2 {
+    -webkit-line-clamp: 2;
+  }
+
+  .webkit-line-clamp-1 {
+    -webkit-line-clamp: 1;
+  }
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
