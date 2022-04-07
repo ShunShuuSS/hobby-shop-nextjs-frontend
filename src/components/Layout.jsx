@@ -4,8 +4,8 @@ import Container from "./container/Container.Components";
 const Layout = ({ children }) => {
   return (
     <>
-      <NavigationBar></NavigationBar>
       <main>
+        <NavigationBar></NavigationBar>
         <Container>{children}</Container>
       </main>
     </>

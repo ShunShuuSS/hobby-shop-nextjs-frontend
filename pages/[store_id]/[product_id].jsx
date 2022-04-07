@@ -1,14 +1,41 @@
 import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 // Components
-import NavigationBar from "../../components/NavigationBar.Components";
-import CardProduct from "../../components/product/CardProduct.Components";
-
+import CardProduct from "../../src/components/product/CardProduct.Components";
+import { useEffect, useState } from "react";
 const ProductPage = () => {
+  const [productData, setProductData] = useState([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (router.query.product_id) {
+      ProductDataApi();
+    }
+  }, [router.query.product_id]);
+
+  const ProductDataApi = async () => {
+    try {
+      const getProductData = (
+        await axios.get(`api/product/getProduct`, {
+          params: {
+            product_id: router.query.product_id,
+          },
+        })
+      ).data.data[0];
+      setProductData(getProductData);
+    } catch (error) {}
+  };
+
+  const StorePage = () => {
+    router.push(`/${router.query.store_id}`);
+  };
   return (
     <>
       <Head>
@@ -35,42 +62,33 @@ const ProductPage = () => {
           </div>
 
           <div className={`body`}>
-            <div className={`title`}>Nama Produk Nama Produk Nama Produk</div>
-            <div className={`rating`}>Rating</div>
+            <div className={`title`}>{productData.product_name}</div>
+            <div className={`rating`}>
+              {productData.product_rating == 0
+                ? "Belum ada rating"
+                : productData.product_rating}
+            </div>
             <hr />
-            <div className={`price`}>Rp99.999.999</div>
+            <div className={`price`}>{"Rp" + productData.product_price}</div>
           </div>
         </div>
         <div className={`body-product`}>
           <div className={`title`}>Rincian Produk</div>
           <div className={`detail-product`}>
-            <p>
-              What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the
-              printing and typesetting industry. Lorem Ipsum has been the
-              industry's standard dummy text ever since the 1500s, when an
-              unknown printer took a galley of type and scrambled it to make a
-              type specimen book. It has survived not only five centuries, but
-              also the leap into electronic typesetting, remaining essentially
-              unchanged. It was popularised in the 1960s with the release of
-              Letraset sheets containing Lorem Ipsum passages, and more recently
-              with desktop publishing software like Aldus PageMaker including
-              versions of Lorem Ipsum. Where does it come from? Contrary to
-              popular belief, Lorem Ipsum is not simply random text. It has
-              roots in a piece of classical Latin literature from 45 BC, making
-              it over 2000 years old. Richard McClintock, a Latin professor at
-              Hampden-Sydney College in Virginia, looked up one of the more
-              obscure Latin words, consectetur, from a Lorem Ipsum passage, and
-              going through the cites of the word in classical literature,
-              discovered the undoubtable source. Lorem Ipsum comes from sections
-              1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The
-              Extremes of Good and Evil) by Cicero, written in 45 BC. This book
-              is a treatise on the theory of ethics, very popular during the
-              Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit
-              amet..", comes from a line in section 1.10.32.
-            </p>
+            <p>{productData.product_detail}</p>
           </div>
         </div>
-        <div className={`product-etc w-full`}>
+        <div>
+          {/* <img src="" alt="" /> */}
+          {/* <Link href={`/`}></Link> */}
+          <div
+            className={`font-bold text-[18px] cursor-pointer`}
+            onClick={StorePage}
+          >
+            {productData.store_name}
+          </div>
+        </div>
+        {/* <div className={`product-etc w-full`}>
           <div className={`title-product-etc`}>Produk lain dari Nama Toko</div>
           <div className={``}>
             <Swiper
@@ -155,7 +173,7 @@ const ProductPage = () => {
               </div>
             </Swiper>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

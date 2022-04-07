@@ -1,10 +1,39 @@
+import axios from "axios";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import CardAddress from "../src/components/profile/CardAddress.Components";
 import Tabs from "../src/components/profile/Tabs.Components";
+import LoginContext from "../src/context/login.context";
+import UserContext from "../src/context/user.context";
 
 const ProfilePage = () => {
+  const [userData, setUserData] = useState([]);
   const [TabsToggle, setTabsToggle] = useState(1);
+  const loginContext = useContext(LoginContext);
+  const userContext = useContext(UserContext);
+
+  useEffect(() => {
+    if (loginContext.UserToken) {
+      UserInfo();
+    }
+  }, [loginContext.UserToken]);
+
+  const UserInfo = async () => {
+    try {
+      const userInfo = (
+        await axios.get(`api/auth/info`, {
+          headers: {
+            Authorization: `Bearer ${loginContext.UserToken}`,
+          },
+        })
+      ).data.data;
+
+      if (userInfo) {
+        setUserData(userInfo);
+        // userContext.UserInfo(userInfo);
+      }
+    } catch (error) {}
+  };
 
   const test = () => {
     console.log("clicked");
@@ -44,11 +73,17 @@ const ProfilePage = () => {
                 <img src="/test1.jpg" className={`w-full`} alt="" />
               </div>
               <div className={`w-[75%] block relative`}>
-                <UserDetail index={`Nama`}>Example Example</UserDetail>
-                <UserDetail index={`Jenis Kelamin`}>Pria</UserDetail>
-                <UserDetail index={`Tanggal Lahir`}>1 januari 2000</UserDetail>
-                <UserDetail index={`Nomor HP`}>(+62) 81111111111 </UserDetail>
-                <UserDetail index={`Email`}>example@example.com</UserDetail>
+                <UserDetail index={`Nama`}>{userData.user_name}</UserDetail>
+                <UserDetail index={`Jenis Kelamin`}>
+                  {userData.user_gender}
+                </UserDetail>
+                <UserDetail index={`Tanggal Lahir`}>
+                  {userData.user_date_of_birth}
+                </UserDetail>
+                <UserDetail index={`Nomor HP`}>
+                  {"(+62) " + userData.user_hp}{" "}
+                </UserDetail>
+                <UserDetail index={`Email`}>{userData.user_email}</UserDetail>
                 <div
                   className={`h-[3rem] w-[10rem] bottom-0 left-0 flex border rounded-md absolute hover:bg-gray-400`}
                 >

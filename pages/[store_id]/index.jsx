@@ -1,11 +1,17 @@
 import Head from "next/head";
 import Link from "next/link";
-
+import { useRouter } from "next/router";
 // Components
-import NavigationBar from "../../components/NavigationBar.Components";
-import CardProduct from "../../components/product/CardProduct.Components";
+import CardProduct from "../../src/components/product/CardProduct.Components";
 
 const StorePage = () => {
+  const router = useRouter();
+  console.log(router.query.store_id);
+
+  // useEffect(() => { }, []);
+
+  const StoreDataApi = () => {};
+
   return (
     <>
       <Head>
@@ -27,7 +33,7 @@ const StorePage = () => {
           </div>
         </div>
       </div>
-      <div className={`store-product`}>
+      {/* <div className={`store-product`}>
         <div className={`text-[30px] m-[1vw_0]`}>Produk</div>
         <div className="product-list-index">
           <div className={`card-product`}>
@@ -66,7 +72,7 @@ const StorePage = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

@@ -6,8 +6,27 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 // Components
 import CardProduct from "../src/components/product/CardProduct.Components";
+import { getCookie } from "cookies-next";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Home() {
+  const [topProductData, setTopProductData] = useState([]);
+
+  useEffect(() => {
+    TopProductApi();
+  }, []);
+  const TopProductApi = async () => {
+    try {
+      const TopProductApi = await (
+        await axios.get(`api/product`, [])
+      ).data.data;
+      if (TopProductApi.length) {
+        setTopProductData(TopProductApi);
+      }
+    } catch (error) {}
+  };
+
   return (
     <>
       <Head>
@@ -42,51 +61,23 @@ export default function Home() {
 
       <div className={``}>
         <div className={`product-list-index`}>
-          <Link href={`/1/1`}>
-            <a>
-              <CardProduct></CardProduct>
-            </a>
-          </Link>
-          <Link href={`/1/1`}>
-            <a>
-              <CardProduct></CardProduct>
-            </a>
-          </Link>
-          <Link href={`/1/1`}>
-            <a>
-              <CardProduct></CardProduct>
-            </a>
-          </Link>
-          <Link href={`/1/1`}>
-            <a>
-              <CardProduct></CardProduct>
-            </a>
-          </Link>
-          <Link href={`/1/1`}>
-            <a>
-              <CardProduct></CardProduct>
-            </a>
-          </Link>
-          <Link href={`/1/1`}>
-            <a>
-              <CardProduct></CardProduct>
-            </a>
-          </Link>
-          <Link href={`/1/1`}>
-            <a>
-              <CardProduct></CardProduct>
-            </a>
-          </Link>
+          {topProductData.map((topProductList) => (
+            <div key={topProductList.product_id}>
+              <CardProduct
+                product_id={topProductList.product_id}
+                store_id={topProductList.store_id}
+                product_name={topProductList.product_name}
+                product_price={topProductList.product_price}
+                product_rating={topProductList.product_rating}
+              />
+            </div>
+          ))}
         </div>
       </div>
       <div className={`mt-[2rem]`}>
         <div className={`text-[25px] mb-[2rem]`}>Produk Rekomendasi</div>
         <div className={`product-list-index`}>
-          <Link href={`/1/1`}>
-            <a>
-              <CardProduct></CardProduct>
-            </a>
-          </Link>
+          <CardProduct></CardProduct>
         </div>
       </div>
     </>

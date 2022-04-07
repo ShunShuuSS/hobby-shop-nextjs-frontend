@@ -1,11 +1,24 @@
+import Router from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import CardQuantity from "../src/components/cart/CartQuantity.Components";
-import NavigationBar from "../components/NavigationBar.Components";
 import CartCardProduct from "../src/components/cart/CartCardProduct.Components";
 import Container from "../src/components/container/Container.Components";
 import CartPriceDetails from "../src/components/cart/CartPriceDetails.Components";
+import { useContext, useEffect } from "react";
+import LoginContext from "../src/context/login.context";
+import UserContext from "../src/context/user.context";
 const CartPage = () => {
+  const loginContext = useContext(LoginContext);
+  const userContext = useContext(UserContext);
+  console.log(userContext);
+
+  useEffect(() => {
+    if (!loginContext.UserToken) {
+      Router.push(`/login`);
+    }
+  }, [loginContext.UserToken]);
+
   return (
     <>
       <Head>
