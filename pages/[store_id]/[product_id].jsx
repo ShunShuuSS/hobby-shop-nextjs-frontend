@@ -9,16 +9,29 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 // Components
 import CardProduct from "../../src/components/product/CardProduct.Components";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import Quantity from "../../src/components/global/Quantity.Components";
+
+// Context
+import ProductCartQuantityContext from "../../src/context/product.cart.quantity.context";
+import UserContext from "../../src/context/user.context";
+
 const ProductPage = () => {
-  const [productData, setProductData] = useState([]);
   const router = useRouter();
+  const [productData, setProductData] = useState([]);
+  const [cartProductQty, setCartProductQty] = useState({
+    qty: 1,
+  });
+
+  const userContext = useContext(UserContext);
 
   useEffect(() => {
     if (router.query.product_id) {
       ProductDataApi();
     }
   }, [router.query.product_id]);
+
+  useEffect(() => {}, []);
 
   const ProductDataApi = async () => {
     try {
@@ -31,6 +44,44 @@ const ProductPage = () => {
       ).data.data[0];
       setProductData(getProductData);
     } catch (error) {}
+  };
+
+  const CheckUserLogin = () => {
+    if (!userContext.UserToken) {
+      router.push(`/login`);
+    }
+  };
+
+  const AddToCart = async () => {
+    // besok buat cek user udah login atau belum, kasih notif, arahkan ke login page
+    CheckUserLogin();
+    // console.log(UserContext.UserToken);
+    try {
+      const addToCartApi = await axios.post(
+        `api/cart/addToCart`,
+        {
+          product_id: router.query.product_id,
+          cart_quantity: cartProductQty.qty,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${UserContext.UserToken}`,
+          },
+        }
+      );
+
+      console.log(addToCartApi);
+    } catch (error) {}
+  };
+
+  const minusQty = () => {
+    if (cartProductQty.qty <= 1) return;
+    setCartProductQty({ qty: cartProductQty.qty - 1 });
+  };
+
+  const plusQty = () => {
+    if (cartProductQty.qty >= productData.product_quantity) return;
+    setCartProductQty({ qty: cartProductQty.qty + 1 });
   };
 
   const StorePage = () => {
@@ -70,6 +121,50 @@ const ProductPage = () => {
             </div>
             <hr />
             <div className={`price`}>{"Rp" + productData.product_price}</div>
+            <div>
+              <div className={`flex border rounded-md w-[8rem] h-[2.5rem] `}>
+                <div
+                  className={`flex items-center h-full w-[2.5rem] ${
+                    cartProductQty.qty <= 1 ? "bg-gray-200" : ""
+                  } `}
+                  onClick={() => minusQty()}
+                >
+                  <img
+                    src="/global/minus.png"
+                    className={`h-[1.5rem] w-[1.5rem] m-auto cursor-pointer`}
+                    alt=""
+                  />
+                </div>
+                <div className={`h-full w-[3rem] border m-auto p-[3px]`}>
+                  <div className={`text-[20px] text-center`}>
+                    {cartProductQty.qty}
+                  </div>
+                </div>
+                <div
+                  className={`flex items-center w-[2.5rem] ${
+                    cartProductQty.qty >= productData.product_quantity
+                      ? "bg-gray-200"
+                      : ""
+                  }`}
+                  onClick={() => plusQty()}
+                >
+                  <img
+                    src="/global/plus.png"
+                    className={`h-[1.5rem] w-[1.5rem] m-auto cursor-pointer`}
+                    alt=""
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className={`flex w-[10rem] h-[2.5rem] border rounded-md cursor-pointer`}
+              onClick={() => AddToCart()}
+            >
+              <div className={`m-auto p-auto text-[17px]`}>Keranjang</div>
+            </div>
+            <div className={`flex w-[10rem] h-[2.5rem] border rounded-md`}>
+              <div className={`m-auto p-auto text-[17px]`}>Beli Langsung</div>
+            </div>
           </div>
         </div>
         <div className={`body-product`}>

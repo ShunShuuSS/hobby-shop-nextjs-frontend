@@ -1,19 +1,34 @@
 import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
 import ProfileNavigation from "./ProfileNavigation.Components";
-import LoginContext from "../../context/login.context";
+import UserContext from "../../context/user.context";
+import { useRouter } from "next/router";
 
 const NavigationBar = () => {
   const [profile, setProfile] = useState(false);
-  const loginContext = useContext(LoginContext);
+  const [navigationHide, setNavigationHide] = useState(false);
+
+  const userContext = useContext(UserContext);
+
+  const router = useRouter();
 
   useEffect(() => {
-    if (loginContext.UserToken) {
-      setProfile(true);
+    if (router.pathname === "/register" || router.pathname === "/login") {
+      setNavigationHide(true);
     } else {
-      setProfile(false);
+      setNavigationHide(false);
     }
-  }, [loginContext]);
+  }, [router.pathname]);
+
+  useEffect(() => {
+    if (userContext.CompleteLoad === true) {
+      if (userContext.UserToken) {
+        setProfile(true);
+      } else {
+        setProfile(false);
+      }
+    }
+  }, [userContext.CompleteLoad]);
 
   return (
     <>
@@ -25,7 +40,8 @@ const NavigationBar = () => {
             <a className={`text-[25px]`}>HOBBYSHOP</a>
           </Link>
         </div>
-        <div className={`m-auto p-[auto]`}>
+        <div className={`${navigationHide ? "hidden" : ""}`}></div>
+        <div className={`${navigationHide ? "hidden" : ""} m-auto p-[auto]`}>
           <input
             type="text"
             placeholder="cari produk ..."
@@ -33,17 +49,24 @@ const NavigationBar = () => {
           />
           <a href=""></a>
         </div>
-        <Link href={`/cart`}>
-          <a className={`w-auto float-right m-auto`}>
+        <div
+          className={`w-auto float-right m-auto cursor-pointer ${
+            navigationHide ? "hidden" : ""
+          }`}
+        >
+          <Link href={`/cart`}>
             <img
               src="/navigationbar/cart.png"
               className={`h-[3rem] w-full float-right`}
               alt=""
             />
-          </a>
-        </Link>
+          </Link>
+        </div>
+
+        <div className={`${navigationHide ? "hidden" : ""}`}></div>
         <div
           className={`
+          ${navigationHide ? "hidden" : ""}
           ${profile == false ? "" : "hidden"}
           h-[2.5rem] w-[4rem] flex my-auto border rounded-md cursor-pointer`}
         >
@@ -53,10 +76,11 @@ const NavigationBar = () => {
         </div>
         <div
           className={`
+          ${navigationHide ? "hidden" : ""}
           ${profile == true ? "" : "hidden"}
           group inline-block relative my-auto cursor-pointer`}
         >
-          <Link href={`/`}>
+          <Link href={`${router.pathname}`}>
             <a className={`w-auto float-right`}>
               <img
                 src="/navigationbar/profile.png"

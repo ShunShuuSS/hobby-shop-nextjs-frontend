@@ -1,4 +1,25 @@
+import { useContext, useEffect, useState } from "react";
+import CartContext from "../../context/cart.context";
+
 const CartPriceDetails = () => {
+  const cartContext = useContext(CartContext);
+
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalProduct, setTotalProduct] = useState(0);
+
+  useEffect(() => {
+    _setPrice();
+  }, [
+    cartContext.ListOfCheckedProduct ||
+      cartContext.TotalPrice ||
+      cartContext.TotalProduct,
+  ]);
+
+  const _setPrice = () => {
+    setTotalPrice(cartContext.TotalPrice);
+    setTotalProduct(cartContext.TotalProduct);
+  };
+
   return (
     <>
       <div className={`w-full border rounded-md`}>
@@ -6,12 +27,12 @@ const CartPriceDetails = () => {
           <div className={`font-bold text-[25px] pb-5`}>Rincian Jumlah</div>
           <div className={`flex justify-between`}>
             <div className={``}>Jumlah Produk</div>
-            <div className={``}>9999</div>
+            <div className={``}>{totalProduct}</div>
           </div>
           <hr />
           <div className={`flex justify-between`}>
             <div className={``}>Total Harga</div>
-            <div className={``}>Rp99.999.999</div>
+            <div className={``}>{"Rp" + totalPrice}</div>
           </div>
         </div>
       </div>

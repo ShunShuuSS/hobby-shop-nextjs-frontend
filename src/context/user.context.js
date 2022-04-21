@@ -1,8 +1,10 @@
 import React from "react";
 
 const UserContext = React.createContext({
-  UserInfo: undefined,
-  SetUserInfo: undefined,
+  UserToken: "",
+  SetToken: "",
+  UserInfo: [],
+  CompleteLoad: undefined,
 });
 
 export default UserContext;

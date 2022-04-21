@@ -16,6 +16,7 @@ export default function Home() {
   useEffect(() => {
     TopProductApi();
   }, []);
+
   const TopProductApi = async () => {
     try {
       const TopProductApi = await (
