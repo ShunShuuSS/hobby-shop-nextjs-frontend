@@ -468,9 +468,7 @@ const AddressPage = () => {
                           }
                           value={kelurahanView}
                         />
-                        {/* !provinsi &&
-                        !kabupaten &&
-                        !kecamatan */}
+
                         {!provinsi &&
                         !kabupaten &&
                         !kecamatan ? null : chooseKelurahan ? (

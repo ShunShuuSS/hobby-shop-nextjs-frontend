@@ -61,7 +61,7 @@ const ProfileNavigation = () => {
             Toko
           </ProfileNavigationOption>
           <ProfileNavigationOption
-            link={`/seller`}
+            link={`/seller/register-store`}
             addClass={`${checkUserStore == false ? "" : "hidden"}`}
           >
             Buka Toko

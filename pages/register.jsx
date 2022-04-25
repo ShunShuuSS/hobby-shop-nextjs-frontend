@@ -312,7 +312,7 @@ const RegisterPage = () => {
 
                 <div
                   className={`w-full border rounded-md mt-5 cursor-pointer`}
-                  onClick={() => Router.push("/login")}
+                  onClick={() => router.push("/login")}
                 >
                   <div className={`text-[20px] font-bold p-2 text-center`}>
                     Login
