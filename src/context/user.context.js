@@ -4,6 +4,7 @@ const UserContext = React.createContext({
   UserToken: "",
   SetToken: "",
   UserInfo: [],
+  StoreInfo: "",
   CompleteLoad: undefined,
 });
 

@@ -1,14 +1,36 @@
 import axios from "axios";
 import { checkCookies, removeCookies } from "cookies-next";
 import Link from "next/link";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../../context/user.context";
 import ProfileNavigationOption from "./ProfileNavigationOption.Components";
 const ProfileNavigation = () => {
-  const [checkUserStore, setCheckUserStore] = useState(false);
+  const [userData, setUserData] = useState([]);
+  const [checkUserStore, setCheckUserStore] = useState(true);
 
   const userContext = useContext(UserContext);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (checkCookies("user_token") == false) {
+      router.push("/login");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userContext.CompleteLoad == true) {
+      if (userContext.UserToken !== "") {
+        if (userContext.StoreInfo.length !== 0) {
+          setCheckUserStore(true);
+        } else {
+          setCheckUserStore(false);
+        }
+        setUserData(userContext.UserInfo);
+      }
+    }
+  }, [userContext.CompleteLoad]);
 
   const removeUserCookies = () => {
     if (
@@ -25,14 +47,6 @@ const ProfileNavigation = () => {
     }
   };
 
-  const _checkUserStore = async () => {
-    const check = await axios.get("api/cart/checkUserStore", {
-      headers: {
-        Authorization: `Bearer ${userContext.UserToken}`,
-      },
-    });
-  };
-
   return (
     <>
       <ul className="absolute hidden group-hover:block mt-[3rem] w-[15rem] right-0">
@@ -40,10 +54,16 @@ const ProfileNavigation = () => {
           <ProfileNavigationOption link={`/profile`}>
             Lihat Profil
           </ProfileNavigationOption>
-          <ProfileNavigationOption link={`/seller`}>
+          <ProfileNavigationOption
+            link={`/seller`}
+            addClass={`${checkUserStore ? "" : "hidden"}`}
+          >
             Toko
           </ProfileNavigationOption>
-          <ProfileNavigationOption link={`/profile`} addClass={`hidden`}>
+          <ProfileNavigationOption
+            link={`/seller`}
+            addClass={`${checkUserStore == false ? "" : "hidden"}`}
+          >
             Buka Toko
           </ProfileNavigationOption>
           <ProfileNavigationOption link={`/transaction`}>

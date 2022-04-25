@@ -12,6 +12,7 @@ const UserContextProvider = (props) => {
   const [userToken, setUserToken] = useState("");
   const [completeLoad, setCompleteLoad] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
+  const [userStore, setUserStore] = useState([]);
 
   useEffect(() => {
     setCompleteLoad(false);
@@ -37,8 +38,27 @@ const UserContextProvider = (props) => {
 
       if (userInfo) {
         setUserInfo(userInfo);
-        _setCookies(token);
+        _getUserStore(token);
+      } else {
+        _removeCookies();
       }
+    } catch (error) {}
+  };
+
+  const _getUserStore = async (token) => {
+    setCompleteLoad(false);
+    try {
+      const checkUserStore = (
+        await axios.get("api/cart/checkUserStore", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).data.data;
+      if (checkUserStore) {
+        setUserStore(checkUserStore);
+      }
+      _setCookies(token);
     } catch (error) {}
   };
 
@@ -47,15 +67,19 @@ const UserContextProvider = (props) => {
     setCookies("user_token", cookies, {
       domain: "localhost",
       path: "/",
+      maxAge: 30 * 24 * 60 * 60,
     });
     setUserToken(cookies);
     setCompleteLoad(true);
   };
 
+  //
+
   const _setToken = (token) => {
     if (token) {
       setCompleteLoad(false);
-      _setNewCookies(token);
+      _getUserInfo(token);
+      // _setNewCookies(token);
     }
   };
 
@@ -70,6 +94,14 @@ const UserContextProvider = (props) => {
     setCompleteLoad(true);
   };
 
+  const _removeCookies = () => {
+    removeCookies("user_token", {
+      domain: "localhost",
+      path: "/",
+    });
+    Router.reload(window.location.pathname);
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -77,6 +109,7 @@ const UserContextProvider = (props) => {
         SetToken: _setToken,
         CompleteLoad: completeLoad,
         UserInfo: userInfo,
+        StoreInfo: userStore,
       }}
     >
       {props.children}
