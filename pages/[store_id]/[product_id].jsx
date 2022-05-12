@@ -47,31 +47,38 @@ const ProductPage = () => {
   };
 
   const CheckUserLogin = () => {
-    if (!userContext.UserToken) {
-      router.push(`/login`);
+    if (userContext.CompleteLoad == true) {
+      if (userContext.UserToken === "") {
+        router.push(`/login`);
+      }
     }
   };
 
   const AddToCart = async () => {
-    // besok buat cek user udah login atau belum, kasih notif, arahkan ke login page
-    CheckUserLogin();
-    // console.log(UserContext.UserToken);
-    try {
-      const addToCartApi = await axios.post(
-        `api/cart/addToCart`,
-        {
-          product_id: router.query.product_id,
-          cart_quantity: cartProductQty.qty,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${UserContext.UserToken}`,
-          },
-        }
-      );
+    console.log(userContext.UserToken);
+    console.log(router.query.product_id);
+    if (userContext.CompleteLoad == true) {
+      if (userContext.UserToken === "") {
+        router.push(`/login`);
+      } else {
+        try {
+          const addToCartApi = await axios.post(
+            "api/cart/addToCart",
+            {
+              product_id: router.query.product_id,
+              cart_quantity: cartProductQty.qty,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${userContext.UserToken}`,
+              },
+            }
+          );
 
-      console.log(addToCartApi);
-    } catch (error) {}
+          console.log(addToCartApi);
+        } catch (error) {}
+      }
+    }
   };
 
   const minusQty = () => {
@@ -119,13 +126,15 @@ const ProductPage = () => {
                 ? "Belum ada rating"
                 : productData.product_rating}
             </div>
-            <hr />
+            <hr className={`w-full`} />
             <div className={`price`}>{"Rp" + productData.product_price}</div>
-            <div>
-              <div className={`flex border rounded-md w-[8rem] h-[2.5rem] `}>
+            <div className={``}>
+              <div
+                className={`flex outline-offset-style-1 rounded-md w-[8rem] h-[2.5rem] `}
+              >
                 <div
                   className={`flex items-center h-full w-[2.5rem] ${
-                    cartProductQty.qty <= 1 ? "bg-gray-200" : ""
+                    cartProductQty.qty <= 1 ? "bg-gray-200 rounded-l-md" : ""
                   } `}
                   onClick={() => minusQty()}
                 >
@@ -135,7 +144,9 @@ const ProductPage = () => {
                     alt=""
                   />
                 </div>
-                <div className={`h-full w-[3rem] border m-auto p-[3px]`}>
+                <div
+                  className={`h-full w-[3rem] outline-offset-style-1 m-auto p-[3px]`}
+                >
                   <div className={`text-[20px] text-center`}>
                     {cartProductQty.qty}
                   </div>
@@ -143,7 +154,7 @@ const ProductPage = () => {
                 <div
                   className={`flex items-center w-[2.5rem] ${
                     cartProductQty.qty >= productData.product_quantity
-                      ? "bg-gray-200"
+                      ? "bg-gray-200 rounded-r-md"
                       : ""
                   }`}
                   onClick={() => plusQty()}
@@ -156,14 +167,16 @@ const ProductPage = () => {
                 </div>
               </div>
             </div>
-            <div
-              className={`flex w-[10rem] h-[2.5rem] border rounded-md cursor-pointer`}
-              onClick={() => AddToCart()}
-            >
-              <div className={`m-auto p-auto text-[17px]`}>Keranjang</div>
-            </div>
-            <div className={`flex w-[10rem] h-[2.5rem] border rounded-md`}>
-              <div className={`m-auto p-auto text-[17px]`}>Beli Langsung</div>
+            <div className={`flex justify-between`}>
+              <div
+                className={`flex w-[10rem] h-[2.5rem] border rounded-md cursor-pointer`}
+                onClick={() => AddToCart()}
+              >
+                <div className={`m-auto p-auto text-[17px]`}>Keranjang</div>
+              </div>
+              <div className={`flex w-[10rem] h-[2.5rem] border rounded-md`}>
+                <div className={`m-auto p-auto text-[17px]`}>Beli Langsung</div>
+              </div>
             </div>
           </div>
         </div>

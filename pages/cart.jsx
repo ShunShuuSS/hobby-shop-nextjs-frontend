@@ -23,18 +23,17 @@ const CartPage = () => {
   const cartContext = useContext(CartContext);
 
   const router = useRouter();
+
   useEffect(() => {
     if (checkCookies("user_token") == false) {
       router.push("/login");
-    }
-  }, []);
-
-  useEffect(() => {
-    if (userContext.CompleteLoad == true) {
-      if (userContext.UserToken === "") {
-        router.push(`/login`);
+    } else {
+      if (userContext.CompleteLoad == true) {
+        if (userContext.UserToken === "") {
+          router.push(`/login`);
+        }
+        UserCartDataApi();
       }
-      UserCartDataApi();
     }
   }, [userContext.CompleteLoad]);
 
@@ -52,12 +51,6 @@ const CartPage = () => {
         setUserCartData(getCartData);
       }
     } catch (error) {}
-  };
-
-  const checkUserLogin = () => {
-    if (!userContext.UserToken) {
-      router.push(`/login`);
-    }
   };
 
   return (
@@ -95,7 +88,6 @@ const CartPage = () => {
             </Link>
           </div>
         </div>
-      
       </div>
     </>
   );

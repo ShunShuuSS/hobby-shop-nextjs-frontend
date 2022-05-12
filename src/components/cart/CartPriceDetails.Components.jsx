@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import CartContext from "../../context/cart.context";
+import helper from "../../helper";
 
 const CartPriceDetails = () => {
   const cartContext = useContext(CartContext);
@@ -32,7 +33,7 @@ const CartPriceDetails = () => {
           <hr />
           <div className={`flex justify-between`}>
             <div className={``}>Total Harga</div>
-            <div className={``}>{"Rp" + totalPrice}</div>
+            <div className={``}>{helper.rupiahCurrency(totalPrice)}</div>
           </div>
         </div>
       </div>

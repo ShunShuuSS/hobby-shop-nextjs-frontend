@@ -24,7 +24,6 @@ const Login = () => {
     };
     try {
       const login = await axios.post("api/auth/login", userLoginData);
-      console.log(login);
       userContext.SetToken(login.data.data.token);
       setCheckEmailPassword(false);
     } catch (error) {

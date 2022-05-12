@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import CartContext from "../src/context/cart.context";
 import UserContext from "../src/context/user.context";
+import helper from "../src/helper";
 
 const CheckOutPage = () => {
   const cartContext = useContext(CartContext);
@@ -30,10 +31,6 @@ const CheckOutPage = () => {
       CheckedProductInCartDataApi();
     }
   }, [userContext.CompleteLoad]);
-
-  useEffect(() => {
-    CheckedProductInCartDataApi();
-  }, [userContext.UserToken]);
 
   const CheckedProductInCartDataApi = async () => {
     if (userContext.UserToken) {
@@ -82,7 +79,9 @@ const CheckOutPage = () => {
           }
         )
       ).data.data;
+      console.log(addNewTransaction);
       if (addNewTransaction.affectedRows) {
+        console.log("berhasil masukin transaksi baru");
         // router.push("/transaction");
       }
     } catch (error) {}
@@ -138,7 +137,7 @@ const CheckOutPage = () => {
                                 <span className={`font-bold`}>
                                   Harga Satuan :&nbsp;
                                 </span>
-                                Rp{product.product_price}
+                                {helper.rupiahCurrency(product.product_price)}
                               </div>
                             </div>
                           </div>
@@ -148,7 +147,9 @@ const CheckOutPage = () => {
                           <div className={`m-1 block`}>
                             <div className={`font-bold`}>Total Harga</div>
                             <div>
-                              Rp{product.cart_quantity * product.product_price}
+                              {helper.rupiahCurrency(
+                                product.cart_quantity * product.product_price
+                              )}
                             </div>
                           </div>
                         </div>
@@ -175,7 +176,7 @@ const CheckOutPage = () => {
               <hr />
               <div className={`flex justify-between`}>
                 <div className={``}>Total Harga</div>
-                <div className={``}>{"Rp" + totalPrice}</div>
+                <div className={``}>{helper.rupiahCurrency(totalPrice)}</div>
               </div>
             </div>
           </div>

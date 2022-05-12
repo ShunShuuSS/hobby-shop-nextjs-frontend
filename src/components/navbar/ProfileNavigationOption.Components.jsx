@@ -5,7 +5,7 @@ const ProfileNavigationOption = ({ children, link, addClass }) => {
       <li className="">
         <Link href={`${link}`}>
           <a
-            className={`bg-white rounded hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap ${addClass}`}
+            className={`bg-white rounded hover:bg-blue-800 hover:text-white py-2 px-4 block whitespace-no-wrap ${addClass}`}
           >
             {children}
           </a>

@@ -22,10 +22,10 @@ const NavigationBar = () => {
 
   useEffect(() => {
     if (userContext.CompleteLoad === true) {
-      if (userContext.UserToken) {
-        setProfile(true);
-      } else {
+      if (userContext.UserToken === "") {
         setProfile(false);
+      } else {
+        setProfile(true);
       }
     }
   }, [userContext.CompleteLoad]);

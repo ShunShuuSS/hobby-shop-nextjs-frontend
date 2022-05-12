@@ -14,12 +14,6 @@ const ProfileNavigation = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (checkCookies("user_token") == false) {
-      router.push("/login");
-    }
-  }, []);
-
-  useEffect(() => {
     if (userContext.CompleteLoad == true) {
       if (userContext.UserToken !== "") {
         if (userContext.StoreInfo.length !== 0) {
@@ -43,26 +37,30 @@ const ProfileNavigation = () => {
         domain: "localhost",
         path: "/",
       });
-      Router.reload(window.location.pathname);
+      router.reload(window.location.pathname);
     }
   };
 
   return (
     <>
-      <ul className="absolute hidden group-hover:block mt-[3rem] w-[15rem] right-0">
-        <div className={`border border-black rounded`}>
+      <ul
+        className={`absolute hidden group-hover:block mt-[3rem] w-[15rem] right-0 bg-white`}
+      >
+        <div className={`rounded outline-style-1`}>
           <ProfileNavigationOption link={`/profile`}>
             Lihat Profil
           </ProfileNavigationOption>
           <ProfileNavigationOption
-            link={`/seller`}
+            link={`/seller/manage-product`}
             addClass={`${checkUserStore ? "" : "hidden"}`}
           >
             Toko
           </ProfileNavigationOption>
           <ProfileNavigationOption
             link={`/seller/register-store`}
-            addClass={`${checkUserStore == false ? "" : "hidden"}`}
+            addClass={`${checkUserStore == false ? "" : "hidden"} ${
+              router.pathname == "/seller/register-store" ? "hidden" : ""
+            }`}
           >
             Buka Toko
           </ProfileNavigationOption>

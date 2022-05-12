@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import CartContext from "../../context/cart.context";
 import UserContext from "../../context/user.context";
+import helper from "../../helper";
 
 import CardQuantity from "./CartQuantity.Components";
 
@@ -110,7 +111,9 @@ const CartCardProduct = ({
                 >
                   {productName}
                 </div>
-                <div className={`text-[18px]`}>{productPrice}</div>
+                <div className={`text-[18px]`}>
+                  {helper.rupiahCurrency(productPrice)}
+                </div>
                 <div className={`absolute bottom-0 right-0`}>
                   <CardQuantity
                     productId={productId}

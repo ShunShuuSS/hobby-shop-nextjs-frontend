@@ -1,7 +1,7 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
-import TabSeller from "../../../src/components/seller/TabSeller.Components";
+import TabSeller from "../../../src/components/seller/manage-transaction/TabSeller.Components";
 
 const ManageProduct = () => {
   const [ListProductEdit, setListProductEdit] = useState(false);
@@ -33,15 +33,16 @@ const ManageProduct = () => {
   OutsideAlerter.propTypes = {
     children: PropTypes.element.isRequired,
   };
+
   return (
     <>
       <TabSeller>
         <div>
           <div className={`flex justify-end`}>
             <div
-              className={`flex border rounded-md h-[2.5rem] hover:bg-gray-300`}
+              className={`flex border rounded-md h-[2.5rem] hover:bg-gray-300 cursor-pointer`}
             >
-              <Link href={`/seller/add-product`}>
+              <Link href={`/seller/manage-product/add-product`}>
                 <div className={`mx-3 my-auto`}>Tambah Produk</div>
               </Link>
             </div>
@@ -105,7 +106,7 @@ const ManageProduct = () => {
                           } w-[10rem] right-0`}
                         >
                           <div className={`border border-black rounded`}>
-                            <Link href={`/seller/edit-product/1`}>
+                            <Link href={`/seller/manage-product/edit-product`}>
                               <a
                                 className={`bg-white rounded hover:bg-gray-400 py-2 px-4 block`}
                               >

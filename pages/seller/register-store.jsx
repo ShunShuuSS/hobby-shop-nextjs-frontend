@@ -8,6 +8,7 @@ import UserContext from "../../src/context/user.context";
 const RegisterStore = () => {
   const userContext = useContext(UserContext);
   const [checkStoreName, setCheckStoreName] = useState(true);
+  const [verificationStoreName, setVerificationStoreName] = useState(false);
   const [registerStoreName, setRegisterStoreName] = useState("");
   const router = useRouter();
 
@@ -42,8 +43,10 @@ const RegisterStore = () => {
       ).data.data;
       if (checkStoreNameDB.length) {
         setCheckStoreName(false);
+        setVerificationStoreName(false);
       } else {
         setCheckStoreName(true);
+        setVerificationStoreName(true);
       }
     } catch (error) {}
   };
@@ -61,8 +64,10 @@ const RegisterStore = () => {
       }
     );
 
+    console.log(registerNewStore);
+
     if (registerNewStore) {
-      //   router.push("/seller");
+      router.push("/seller");
       router.reload("/seller");
     }
   };
@@ -70,7 +75,7 @@ const RegisterStore = () => {
   const form = (e) => {
     e.preventDefault();
     _checkStoreName();
-    if (checkStoreName) {
+    if (verificationStoreName) {
       registerNewStore();
     }
   };

@@ -1,17 +1,19 @@
 import axios from "axios";
 import { checkCookies } from "cookies-next";
 import { useRouter } from "next/router";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CardTransaction from "../../../src/components/seller/manage-transaction/CardTransaction.Components";
 import TabSeller from "../../../src/components/seller/manage-transaction/TabSeller.Components";
 import TabTransaction from "../../../src/components/seller/manage-transaction/TabTransaction.Components";
 import UserContext from "../../../src/context/user.context";
 
-const SellerTransaction = () => {
-  const [transactionData, setTransactionData] = useState([]);
+const Sent = () => {
   const userContext = useContext(UserContext);
-  const [loadingTransaction, setLoadingTransaction] = useState(false);
-
+  const [sentTransactionData, setSentTransactionData] = useState([]);
+  const [loadingTransaction, setLoadingTransaction] = useState({
+    loading: false,
+    isNull: false,
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -24,7 +26,7 @@ const SellerTransaction = () => {
     if (userContext.CompleteLoad == true) {
       if (userContext.UserToken !== "") {
         if (userContext.StoreInfo.length !== 0) {
-          GetSellerTransaction();
+          sentTransaction();
         } else {
           router.push("/seller/register-store");
         }
@@ -32,32 +34,32 @@ const SellerTransaction = () => {
     }
   }, [userContext.CompleteLoad]);
 
-  const GetSellerTransaction = async () => {
-    setLoadingTransaction(false);
+  const sentTransaction = async () => {
+    setLoadingTransaction({ loading: false });
     try {
-      const sellerTransaction = (
-        await axios.get(`api/sellerTransaction/allTransactionByUserId`, {
+      const sentTransaction = (
+        await axios.get(`api/sellerTransaction/sentTransactionByUserId`, {
           headers: {
             Authorization: `Bearer ${userContext.UserToken}`,
           },
         })
       ).data.data;
 
-      if (sellerTransaction.length !== 0) {
-        setTransactionData(sellerTransaction);
-        setLoadingTransaction(true);
+      if (sentTransaction.length !== 0) {
+        setSentTransactionData(sentTransaction);
+        setLoadingTransaction({ loading: true, isNUll: false });
       } else {
-        setLoadingTransaction(true);
+        setLoadingTransaction({ loading: true, isNUll: true });
       }
     } catch (error) {}
   };
   return (
     <>
-      {loadingTransaction == true ? (
+      {loadingTransaction.loading == true ? (
         <>
           <TabSeller>
             <TabTransaction>
-              {transactionData.map((transaction) => (
+              {sentTransactionData.map((transaction) => (
                 <React.Fragment key={transaction.transaction_id}>
                   <CardTransaction transaction={transaction} />
                 </React.Fragment>
@@ -86,4 +88,4 @@ const SellerTransaction = () => {
   );
 };
 
-export default SellerTransaction;
+export default Sent;

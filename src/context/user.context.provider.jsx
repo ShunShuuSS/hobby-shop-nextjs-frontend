@@ -7,12 +7,16 @@ import {
   removeCookies,
   checkCookies,
 } from "cookies-next";
+import { useRouter } from "next/router";
+import moment from "moment";
 
 const UserContextProvider = (props) => {
   const [userToken, setUserToken] = useState("");
   const [completeLoad, setCompleteLoad] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
   const [userStore, setUserStore] = useState([]);
+
+  const router = useRouter();
 
   useEffect(() => {
     setCompleteLoad(false);
@@ -21,9 +25,26 @@ const UserContextProvider = (props) => {
       path: "/",
     })?.toString();
     if (user_cookies && user_cookies !== "") {
-      _getUserInfo(user_cookies);
+      _relogin(user_cookies);
     }
   }, []);
+
+  const _relogin = async (cookie) => {
+    setCompleteLoad(false);
+    try {
+      const relogin = (
+        await axios.get("api/auth/relogin", {
+          headers: {
+            Authorization: `Bearer ${cookie}`,
+          },
+        })
+      ).data.data;
+
+      if (relogin.length !== 0) {
+        _setToken(relogin.token);
+      }
+    } catch (error) {}
+  };
 
   const _getUserInfo = async (token) => {
     setCompleteLoad(false);
@@ -36,13 +57,15 @@ const UserContextProvider = (props) => {
         })
       ).data.data;
 
-      if (userInfo) {
+      if (userInfo.length !== 0) {
         setUserInfo(userInfo);
         _getUserStore(token);
       } else {
         _removeCookies();
       }
-    } catch (error) {}
+    } catch (error) {
+      _removeCookies();
+    }
   };
 
   const _getUserStore = async (token) => {
@@ -55,32 +78,12 @@ const UserContextProvider = (props) => {
           },
         })
       ).data.data;
-      if (checkUserStore) {
+
+      if (checkUserStore.length !== 0) {
         setUserStore(checkUserStore);
       }
-      _setCookies(token);
+      _setNewCookies(token);
     } catch (error) {}
-  };
-
-  const _setCookies = (cookies) => {
-    setCompleteLoad(false);
-    setCookies("user_token", cookies, {
-      domain: "localhost",
-      path: "/",
-      maxAge: 30 * 24 * 60 * 60,
-    });
-    setUserToken(cookies);
-    setCompleteLoad(true);
-  };
-
-  //
-
-  const _setToken = (token) => {
-    if (token) {
-      setCompleteLoad(false);
-      _getUserInfo(token);
-      // _setNewCookies(token);
-    }
   };
 
   const _setNewCookies = (token) => {
@@ -94,12 +97,24 @@ const UserContextProvider = (props) => {
     setCompleteLoad(true);
   };
 
+  // Login Session
+
+  const _setToken = (token) => {
+    if (token) {
+      setCompleteLoad(false);
+      _getUserInfo(token);
+    } else {
+      _removeCookies();
+    }
+  };
+
   const _removeCookies = () => {
+    setCompleteLoad(false);
     removeCookies("user_token", {
       domain: "localhost",
       path: "/",
     });
-    Router.reload(window.location.pathname);
+    router.reload(window.location.pathname);
   };
 
   return (

@@ -64,10 +64,12 @@ const CardQuantity = ({ productId, productQty, cartProductQty }) => {
 
   return (
     <>
-      <div className={`flex border rounded-md w-[8rem] h-[2.5rem] `}>
+      <div
+        className={`flex outline-offset-style-1 rounded-md w-[8rem] h-[2.5rem] `}
+      >
         <div
           className={`flex items-center h-full w-[2.5rem] ${
-            product.qty <= 1 ? "bg-gray-200" : ""
+            product.qty <= 1 ? "bg-gray-200 rounded-l-md" : ""
           } `}
           onClick={() => minusQty()}
         >
@@ -77,12 +79,14 @@ const CardQuantity = ({ productId, productQty, cartProductQty }) => {
             alt=""
           />
         </div>
-        <div className={`h-full w-[3rem] border m-auto p-[3px]`}>
+        <div
+          className={`h-full w-[3rem] outline-offset-style-1 m-auto p-[3px]`}
+        >
           <div className={`text-[20px] text-center`}>{product.qty}</div>
         </div>
         <div
           className={`flex items-center w-[2.5rem] ${
-            product.qty >= productQty ? "bg-gray-200" : ""
+            product.qty >= productQty ? "bg-gray-200 rounded-r-md" : ""
           }`}
           onClick={() => plusQty()}
         >

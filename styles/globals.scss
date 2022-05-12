@@ -164,7 +164,7 @@
       }
 
       .body {
-        @apply m-0;
+        @apply m-0 w-2/3;
 
         .title {
           @apply
@@ -302,6 +302,24 @@
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
+  }
+
+  .outline-style-1{
+    outline: 1px solid rgba(156, 163, 175);
+  }
+
+  .outline-style-2{
+    outline: 2px solid rgba(156, 163, 175);
+  }
+
+  .outline-offset-style-1{
+    outline: 1px solid rgba(156, 163, 175);
+    outline-offset: -1px;
+  }
+
+  .outline-offset-style-2{
+    outline: 2px solid rgba(156, 163, 175);
+    outline-offset: -1px;
   }
 }
 
