@@ -7,11 +7,13 @@ import "swiper/css";
 // Components
 import CardProduct from "../src/components/product/CardProduct.Components";
 import { getCookie } from "cookies-next";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import UserContext from "../src/context/user.context";
 
 export default function Home() {
   const [topProductData, setTopProductData] = useState([]);
+  const userContext = useContext(UserContext)
 
   useEffect(() => {
     TopProductApi();

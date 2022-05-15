@@ -79,27 +79,32 @@ const AddProduct = () => {
   };
 
   const HandleShowImage = (e) => {
-    if (e.target.files) {
+    if (e.target && e.target.files) {
       var files_length = 0;
-      if (e.target.files.length < 6) {
-        files_length = e.target.files.length;
-      } else {
-        files_length = 5;
+      if (productImage.length <= 5) {
+        if (e.target.files.length + productImage.length <= 5) {
+          files_length = e.target.files.length;
+        } else {
+          files_length = 5 - productImage.length;
+        }
+
+        const list_of_files = [];
+
+        for (let i = 0; i < files_length; i++) {
+          list_of_files.push({
+            file: e.target.files[i],
+            url: URL.createObjectURL(e.target.files[i]),
+          });
+        }
+        setProductImage([...productImage, ...list_of_files]);
       }
-      const list_of_files = [];
-      for (let i = 0; i < files_length; i++) {
-        list_of_files.push({
-          file: e.target.files[i],
-          url: URL.createObjectURL(e.target.files[i]),
-        });
-      }
-      setProductImage([...productImage, ...list_of_files]);
     }
   };
 
   const HandleRemoveImage = async (i) => {
+    console.log(i);
     const list_of_files = [...productImage];
-    list_of_files.splice(i, i + 1);
+    list_of_files.splice(i, 1);
     setProductImage(list_of_files);
   };
 

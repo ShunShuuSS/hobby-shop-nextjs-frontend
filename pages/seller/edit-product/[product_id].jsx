@@ -1,10 +1,13 @@
+import axios from "axios";
 import { useRouter } from "next/router";
-import { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import UserContext from "../../../src/context/user.context";
 
-const EditProduct = ({ productData }) => {
+const EditProduct = () => {
   // input field
   const [productImage, setProductImage] = useState([]);
+  const [productNewImage, setProductNewImage] = useState([]);
+  const [removedImg, setRemovedImg] = useState([]); // list of image to be deleted from DB
   const [productName, setProductName] = useState("");
   const [productDetial, setproductDetial] = useState("");
   const [productQuantity, setProductQuantity] = useState(0);
@@ -36,9 +39,42 @@ const EditProduct = ({ productData }) => {
         if (userContext.StoreInfo.length === 0) {
           router.push("/seller/register-store");
         }
+        getProductData();
       }
     }
   }, [userContext.CompleteLoad]);
+
+  const getProductData = async () => {
+    let files_list = [];
+    try {
+      const productData = (
+        await axios.get(`api/sellerProduct/getProduct`, {
+          params: {
+            product_id: router.query.product_id,
+            store_id: userContext.StoreInfo[0].store_id,
+          },
+          headers: {
+            Authorization: `Bearer ${userContext.UserToken}`,
+          },
+        })
+      ).data.data[0];
+      if (productData.length !== 0) {
+        setProductName(productData.product_name);
+        setproductDetial(productData.product_detail);
+        setProductQuantity(productData.product_quantity);
+        setProductPrice(productData.product_price);
+        if (productData.product_img.length) {
+          for (let i = 0; i < productData.product_img.length; i++) {
+            files_list.push({
+              ...productData.product_img[i],
+              url: "",
+            });
+            setProductImage([...files_list]);
+          }
+        }
+      }
+    } catch (error) {}
+  };
 
   // const insertNewProduct = async () => {
   //   setLoadingInsert({ formButton: true });
@@ -77,32 +113,48 @@ const EditProduct = ({ productData }) => {
   // };
 
   const HandleShowImage = (e) => {
-    if (e.target.files) {
+    if (e.target && e.target.files) {
       var files_length = 0;
-      if (e.target.files.length < 6) {
-        files_length = e.target.files.length;
-      } else {
-        files_length = 5;
+      if (productImage.length <= 5) {
+        if (e.target.files.length + productImage.length <= 5) {
+          files_length = e.target.files.length;
+        } else {
+          files_length = 5 - productImage.length;
+        }
+
+        const list_of_files = [];
+
+        for (let i = 0; i < files_length; i++) {
+          list_of_files.push({
+            file: e.target.files[i],
+            url: URL.createObjectURL(e.target.files[i]),
+          });
+        }
+        setProductNewImage([...productNewImage, ...list_of_files]);
+        setProductImage([...productImage, ...list_of_files]);
       }
-      const list_of_files = [];
-      for (let i = 0; i < files_length; i++) {
-        list_of_files.push({
-          file: e.target.files[i],
-          url: URL.createObjectURL(e.target.files[i]),
-        });
-      }
-      setProductImage([...productImage, ...list_of_files]);
     }
   };
 
-  const HandleRemoveImage = async (i) => {
+  const HandleRemoveImage = async (imageInfo, i) => {
+    if (imageInfo.url === "") {
+      const removedImageData = [];
+      removedImageData.push({ ...imageInfo });
+      setRemovedImg([...removedImg, ...removedImageData]);
+    } else {
+      const removedImage = [...productNewImage];
+      removedImage.splice(i - productImage.length, 1);
+      console.log(removedImage);
+      setProductNewImage(removedImage);
+    }
     const list_of_files = [...productImage];
-    list_of_files.splice(i, i + 1);
+    list_of_files.splice(i, 1);
     setProductImage(list_of_files);
   };
 
   const HandleFormSubmit = (e) => {
     e.preventDefault();
+    console.log(productNewImage);
     // insertNewProduct();
   };
   return (
@@ -120,7 +172,14 @@ const EditProduct = ({ productData }) => {
                       className={`relative w-[10rem] mr-2 ring-1 ring-gray-500 ring-offset-0 rounded-md`}
                     >
                       <img
-                        src={img.url}
+                        src={
+                          img.url === ""
+                            ? `http://localhost:5000/` +
+                              img.product_img_name +
+                              `_150` +
+                              `.webp`
+                            : img.url
+                        }
                         className={`object-cover rounded-md w-full h-[10rem]`}
                         alt=""
                       />
@@ -140,7 +199,7 @@ const EditProduct = ({ productData }) => {
                               src="/assets/seller/trash.png"
                               className={`w-[2rem] rounded-md cursor-pointer`}
                               alt=""
-                              onClick={() => HandleRemoveImage(i)}
+                              onClick={() => HandleRemoveImage(img, i)}
                             />
                           </div>
                         </div>
@@ -177,6 +236,7 @@ const EditProduct = ({ productData }) => {
                 type="text"
                 className={`w-full h-[2.5rem] p-1 border rounded-md border-blue-600`}
                 onChange={(e) => setProductName(e.target.value)}
+                value={productName}
               />
             </div>
             <div>
@@ -187,6 +247,7 @@ const EditProduct = ({ productData }) => {
                 cols="5"
                 rows="15"
                 onChange={(e) => setproductDetial(e.target.value)}
+                value={productDetial}
               ></textarea>
             </div>
             <div className={`flex`}>
@@ -196,6 +257,7 @@ const EditProduct = ({ productData }) => {
                   type="text"
                   className={`w-[15rem] h-[2.5rem] p-1 border rounded-md border-blue-600 webkit-appearance`}
                   onChange={(e) => setProductPrice(e.target.value)}
+                  value={productPrice}
                 />
               </div>
               <div className={`m-1`}></div>
@@ -205,6 +267,7 @@ const EditProduct = ({ productData }) => {
                   type="text"
                   className={`w-[15rem] h-[2.5rem] p-1 border rounded-md border-blue-600`}
                   onChange={(e) => setProductQuantity(e.target.value)}
+                  value={productQuantity}
                 />
               </div>
             </div>
