@@ -1,25 +1,25 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useContext } from "react";
-import NotificationAddProductSuccess from "../../../src/components/seller/notification/AddProductSuccessNotif.Components";
+import NotificationManageProductSuccess from "../../../src/components/seller/notification/ManageProductSuccessNotif.Components";
 import UserContext from "../../../src/context/user.context";
 
 const AddProduct = () => {
   // input field
   const [productImage, setProductImage] = useState([]);
   const [productName, setProductName] = useState("");
-  const [productDetial, setproductDetial] = useState("");
+  const [productDetail, setproductDetail] = useState("");
   const [productQuantity, setProductQuantity] = useState(0);
   const [productPrice, setProductPrice] = useState(0);
-  const [toggleActive, setToggleActive] = useState(true);
+  const [productStatus, setProductStatus] = useState(true);
 
   // helper
-  const [checkInputIsNull, setCheckInputIsNull] = useState({
-    img: false,
-    name: false,
-    detail: false,
-    quantity: false,
-    price: false,
+  const [validationInput, setValidationInput] = useState({
+    img: true,
+    name: true,
+    detail: true,
+    quantity: true,
+    price: true,
   });
   const [loadingInsert, setLoadingInsert] = useState({
     formButton: false,
@@ -47,10 +47,11 @@ const AddProduct = () => {
     let formData = new FormData();
 
     formData.append("product_name", productName);
-    formData.append("product_detail", productDetial);
+    formData.append("product_detail", productDetail);
     formData.append("product_price", productPrice);
     formData.append("product_quantity", productQuantity);
-    formData.append("store_id", userContext.UserToken);
+    formData.append("store_id", userContext.StoreInfo[0].store_id);
+    formData.append("product_status", productStatus ? 1 : 0);
 
     if (productImage) {
       const dataTransfer = new DataTransfer();
@@ -66,7 +67,7 @@ const AddProduct = () => {
     }
 
     const resultInsert = (
-      await axios.post(`api/product/AddNewProduct`, formData, {
+      await axios.post(`api/sellerProduct/AddNewProduct`, formData, {
         headers: {
           Authorization: `Bearer ${userContext.UserToken}`,
         },
@@ -102,84 +103,134 @@ const AddProduct = () => {
   };
 
   const HandleRemoveImage = async (i) => {
-    console.log(i);
     const list_of_files = [...productImage];
     list_of_files.splice(i, 1);
     setProductImage(list_of_files);
   };
 
+  // const HandleChangeInputName = (e) => {
+  //   if (e.target.value ) {
+  //     setProductName(e.target.value);
+  //   }
+  // }
+
   const HandleFormSubmit = (e) => {
     e.preventDefault();
-    insertNewProduct();
+    if (HandleValidationInput()) {
+      insertNewProduct();
+    }
+  };
+
+  const HandleValidationInput = () => {
+    let formIsValid = true;
+
+    if (productImage.length === 0) {
+      setValidationInput({ img: false });
+      formIsValid = false;
+    } else {
+      setValidationInput({ img: true });
+    }
+
+    if (productName == "") {
+      setValidationInput({ name: false });
+      formIsValid = false;
+    } else {
+      setValidationInput({ name: true });
+    }
+
+    if (productDetail === "") {
+      setValidationInput({ detail: false });
+      formIsValid = false;
+    } else {
+      setValidationInput({ detail: true });
+    }
+
+    if (productPrice === 0) {
+      setValidationInput({ price: false });
+      formIsValid = false;
+    } else {
+      setValidationInput({ price: true });
+    }
+
+    return formIsValid;
   };
 
   return (
     <>
-      <NotificationAddProductSuccess show={inputSuccess} />
+      <NotificationManageProductSuccess
+        show={inputSuccess}
+        text={`Produk berhasil ditambah.`}
+        goToRouteText={`Pindah ke halaman Atur Produk`}
+        goToRoute={`/seller/manage-product`}
+      />
       <div className={``}>
         <div className={`text-[25px]`}>Tambah Produk</div>
         <div className={`border rounded-md p-3 border-blue-600`}>
-          <div className={`block`}>
-            <div>Foto Produk</div>
-            <div className={`my-2`}>
-              <div className={`w-full h-[10rem] flex`}>
-                {productImage.map((img, i) => (
-                  <React.Fragment key={i}>
-                    <div
-                      className={`relative w-[10rem] mr-2 ring-1 ring-gray-500 ring-offset-0 rounded-md`}
-                    >
-                      <img
-                        src={img.url}
-                        className={`object-cover rounded-md w-full h-[10rem]`}
-                        alt=""
-                      />
+          <form onSubmit={HandleFormSubmit} className={`block`}>
+            {/* Product Image */}
+            <div className={``}>
+              <div>Foto Produk</div>
+              <div className={`my-2`}>
+                <div className={`w-full h-[10rem] flex`}>
+                  {productImage.map((img, i) => (
+                    <React.Fragment key={i}>
                       <div
-                        className={`w-[10rem] h-[3rem] group rounded-b-md absolute z-[3] -translate-y-[3rem] opacity-0 hover:opacity-100 hover:transition duration-100 hover:bg-gray-100/80`}
+                        className={`relative w-[10rem] mr-2 ring-1 ring-gray-500 ring-offset-0 rounded-md`}
                       >
+                        <img
+                          src={img.url}
+                          className={`object-cover rounded-md w-full h-[10rem]`}
+                          alt=""
+                        />
                         <div
-                          className={`w-[9rem] absolute translate-x-2 bottom-1`}
+                          className={`w-[10rem] h-[3rem] group rounded-b-md absolute z-[3] -translate-y-[3rem] opacity-0 hover:opacity-100 hover:transition duration-100 hover:bg-gray-100/80`}
                         >
-                          <div className={`flex justify-between`}>
-                            <img
-                              src="/assets/seller/edit.png"
-                              className={`w-[2rem] rounded-md cursor-pointer`}
-                              alt=""
-                            />
-                            <img
-                              src="/assets/seller/trash.png"
-                              className={`w-[2rem] rounded-md cursor-pointer`}
-                              alt=""
-                              onClick={() => HandleRemoveImage(i)}
-                            />
+                          <div
+                            className={`w-[9rem] absolute translate-x-2 bottom-1`}
+                          >
+                            <div className={`flex justify-between`}>
+                              <img
+                                src="/assets/seller/edit.png"
+                                className={`w-[2rem] rounded-md cursor-pointer`}
+                                alt=""
+                              />
+                              <img
+                                src="/assets/seller/trash.png"
+                                className={`w-[2rem] rounded-md cursor-pointer`}
+                                alt=""
+                                onClick={() => HandleRemoveImage(i)}
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </React.Fragment>
-                ))}
-                {productImage.length < 5 ? (
-                  <>
-                    <label htmlFor={`input-photo`}>
-                      <div
-                        className={`relative w-[10rem] h-[10rem] mr-2 border-2 border-gray-500 hover:border-blue-700 transition border-dashed rounded-md cursor-pointer bg-gray-500/30 hover:bg-blue-600/40`}
+                    </React.Fragment>
+                  ))}
+                  {productImage.length < 5 ? (
+                    <>
+                      <label htmlFor={`input-photo`}>
+                        <div
+                          className={`relative w-[10rem] h-[10rem] mr-2 border-2 border-gray-500 hover:border-blue-700 transition border-dashed rounded-md cursor-pointer bg-gray-500/30 hover:bg-blue-600/40`}
+                        />
+                      </label>
+
+                      <input
+                        id={`input-photo`}
+                        type="file"
+                        onChange={HandleShowImage}
+                        hidden
+                        multiple
                       />
-                    </label>
-
-                    <input
-                      id={`input-photo`}
-                      type="file"
-                      onChange={HandleShowImage}
-                      hidden
-                      multiple
-                    />
-                  </>
-                ) : null}
+                    </>
+                  ) : null}
+                </div>
+                <div className={`text-red-600`}>
+                  Jumlah foto min. 1, maks. 5 buah.
+                </div>
               </div>
-              <div className={`text-red-600`}>Jumlah foto maksimal 5 buah</div>
             </div>
-          </div>
 
-          <form onSubmit={HandleFormSubmit} className={`block`}>
+            {/* Product Name */}
             <div>
               <div>Judul Produk</div>
               <input
@@ -187,61 +238,90 @@ const AddProduct = () => {
                 className={`w-full h-[2.5rem] p-1 border rounded-md border-blue-600`}
                 onChange={(e) => setProductName(e.target.value)}
               />
+              {validationInput.name == false ? (
+                <>
+                  <div className={`text-red-600`}>
+                    Judul produk tidak boleh kosong.
+                  </div>
+                </>
+              ) : null}
             </div>
+
+            {/* Product Detail */}
             <div>
-              <div>Detail Produk</div>
+              <div>Rincian Produk</div>
               <textarea
                 name=""
                 className={`border rounded-md w-full p-1 resize-none text-justify border-blue-600 focus:border-blue-600`}
                 cols="5"
                 rows="15"
-                onChange={(e) => setproductDetial(e.target.value)}
-              ></textarea>
+                onChange={(e) => setproductDetail(e.target.value)}
+              />
+              {validationInput.detail == false ? (
+                <>
+                  <div className={`text-red-600`}>
+                    Rincian produk tidak boleh kosong.
+                  </div>
+                </>
+              ) : null}
             </div>
+
             <div className={`flex`}>
+              {/* Product Price */}
               <div>
                 <div>Harga</div>
                 <input
-                  type="text"
+                  type="number"
                   className={`w-[15rem] h-[2.5rem] p-1 border rounded-md border-blue-600 webkit-appearance`}
                   onChange={(e) => setProductPrice(e.target.value)}
+                  placeholder={`10.000`}
                 />
+                {validationInput.price == false ? (
+                  <>
+                    <div className={`text-red-600`}>
+                      Harga produk tidak boleh 0 (nol).
+                    </div>
+                  </>
+                ) : null}
               </div>
               <div className={`m-1`}></div>
+              {/* Product Quantity */}
               <div>
                 <div>Jumlah Produk</div>
                 <input
-                  type="text"
+                  type="number"
                   className={`w-[15rem] h-[2.5rem] p-1 border rounded-md border-blue-600`}
                   onChange={(e) => setProductQuantity(e.target.value)}
+                  value={productQuantity}
                 />
               </div>
             </div>
 
             <div className={`flex justify-end`}>
+              {/* Product Status */}
               <div className="flex justify-end">
                 <label
                   htmlFor="toggleB"
                   className="flex items-center cursor-pointer"
                 >
                   <div className="ml-3 text-gray-700 font-medium mr-2">
-                    {toggleActive ? "Produk Aktif" : "Produk Tidak Aktif"}
+                    {productStatus ? "Produk Aktif" : "Produk Tidak Aktif"}
                   </div>
                   <div className="relative">
                     <input
                       type="checkbox"
                       id="toggleB"
                       className="sr-only"
-                      onChange={() =>
-                        toggleActive
-                          ? setToggleActive(false)
-                          : setToggleActive(true)
+                      onClick={() =>
+                        productStatus
+                          ? setProductStatus(false)
+                          : setProductStatus(true)
                       }
                     />
                     <div className="block bg-gray-300 w-14 h-8 rounded-full" />
                     <div
                       className={`${
-                        toggleActive ? "bg-blue-600 translate-x-full" : ""
+                        productStatus ? "bg-blue-600 translate-x-full" : ""
                       } absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition duration-300`}
                     />
                   </div>

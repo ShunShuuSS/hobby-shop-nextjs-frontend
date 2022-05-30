@@ -3,10 +3,13 @@ import Link from "next/link";
 import ProfileNavigation from "./ProfileNavigation.Components";
 import UserContext from "../../context/user.context";
 import { useRouter } from "next/router";
+import { checkCookies } from "cookies-next";
 
 const NavigationBar = () => {
   const [profile, setProfile] = useState(false);
   const [navigationHide, setNavigationHide] = useState(false);
+
+  const [loadingProfileComplete, setLoadingProfileComplete] = useState(false);
 
   const userContext = useContext(UserContext);
 
@@ -21,14 +24,25 @@ const NavigationBar = () => {
   }, [router.pathname]);
 
   useEffect(() => {
-    if (userContext.CompleteLoad === true) {
-      if (userContext.UserToken === "") {
-        setProfile(false);
-      } else {
-        setProfile(true);
+    if (checkCookies("user_token") == false) {
+      setLoadingProfileComplete(true);
+    } else {
+      if (userContext.CompleteLoad === true) {
+        if (userContext.UserToken !== "") {
+          setProfile(true);
+          setLoadingProfileComplete(true);
+        } else {
+          setLoadingProfileComplete(true);
+          setProfile(false);
+        }
       }
     }
   }, [userContext.CompleteLoad]);
+
+  const loadNavigation = () => {
+    setProfile(true);
+    setLoadingProfileComplete(true);
+  };
 
   return (
     <>
@@ -62,35 +76,56 @@ const NavigationBar = () => {
             />
           </Link>
         </div>
+        {/* <div class="animate-pulse flex space-x-4 group relative my-auto">
+          <div class="rounded-full bg-slate-200 h-[2.5rem] w-[2.5rem]"></div>
+        </div> */}
 
-        <div className={`${navigationHide ? "hidden" : ""}`}></div>
-        <div
-          className={`
-          ${navigationHide ? "hidden" : ""}
-          ${profile == false ? "" : "hidden"}
-          h-[2.5rem] w-[4rem] flex my-auto border rounded-md cursor-pointer`}
-        >
-          <Link href={`/login`}>
-            <a className={`m-auto font-bold text-[18px]`}>Login</a>
-          </Link>
-        </div>
-        <div
-          className={`
-          ${navigationHide ? "hidden" : ""}
-          ${profile == true ? "" : "hidden"}
-          group inline-block relative my-auto cursor-pointer`}
-        >
-          <Link href={`${router.pathname}`}>
-            <a className={`w-auto float-right`}>
-              <img
-                src="/navigationbar/profile.png"
-                className={`h-[3rem] float-right`}
-                alt=""
-              />
-            </a>
-          </Link>
-          <ProfileNavigation></ProfileNavigation>
-        </div>
+        {loadingProfileComplete ? (
+          <>
+            {profile ? (
+              <>
+                {navigationHide ? null : (
+                  <>
+                    <div
+                      className={`w-[3rem] h-[3rem]
+                group inline-block relative my-auto cursor-pointer`}
+                    >
+                      <a className={`w-auto float-right`}>
+                        <img
+                          src="/navigationbar/profile.png"
+                          className={`w-full h-full float-right`}
+                          alt=""
+                        />
+                      </a>
+
+                      <ProfileNavigation></ProfileNavigation>
+                    </div>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                {navigationHide ? null : (
+                  <>
+                    <div
+                      className={`
+                ${navigationHide ? "hidden" : ""}
+                h-[2.5rem] w-[4rem] flex my-auto border rounded-md cursor-pointer`}
+                    >
+                      <Link href={`/login`}>
+                        <a className={`m-auto font-bold text-[18px]`}>Login</a>
+                      </Link>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+          </>
+        ) : (
+          <div className="animate-pulse flex space-x-4">
+            <div className="rounded-full bg-slate-200 w-[2.5rem] h-[2.5rem] my-auto"></div>
+          </div>
+        )}
       </div>
     </>
   );

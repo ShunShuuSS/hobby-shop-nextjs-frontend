@@ -3,6 +3,7 @@ import { checkCookies } from "cookies-next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
+import CustomNotification from "../src/components/notification/CustomNotification.Components";
 import CartContext from "../src/context/cart.context";
 import UserContext from "../src/context/user.context";
 import helper from "../src/helper";
@@ -14,6 +15,10 @@ const CheckOutPage = () => {
   const [productData, setProductData] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalProduct, setTotalProduct] = useState(0);
+  const [notifOrder, setNotifOrder] = useState({
+    success: false,
+    error: false,
+  });
 
   const router = useRouter();
 
@@ -56,7 +61,9 @@ const CheckOutPage = () => {
           setTotalPrice(totalPrice);
           setTotalProduct(totalProduct);
         }
-      } catch (error) {}
+      } catch (error) {
+        setNotifOrder({ error: true });
+      }
     }
   };
 
@@ -79,12 +86,14 @@ const CheckOutPage = () => {
           }
         )
       ).data.data;
-      console.log(addNewTransaction);
+
       if (addNewTransaction.affectedRows) {
-        console.log("berhasil masukin transaksi baru");
+        setNotifOrder({ success: true });
         // router.push("/transaction");
       }
-    } catch (error) {}
+    } catch (error) {
+      setNotifOrder({ error: true });
+    }
   };
 
   const HandleSubmitTransaction = () => {
@@ -96,6 +105,18 @@ const CheckOutPage = () => {
       <Head>
         <title>Checkout</title>
       </Head>
+      <CustomNotification
+        show={notifOrder.success}
+        text={"Transaksi Berhasil"}
+        goToRouteText={"ke halaman daftar transaksi"}
+        goToRoute={"/transaction"}
+      />
+      <CustomNotification
+        show={notifOrder.error}
+        text={"Terjadi kesalahan"}
+        goToRouteText={"kembali kehalaman keranjang"}
+        goToRoute={"/cart"}
+      />
       <div className={`w-auto flex justify-between`}>
         <div className={`w-[65%]`}>
           <div className={``}>

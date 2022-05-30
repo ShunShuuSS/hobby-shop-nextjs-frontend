@@ -6,6 +6,10 @@ const UserContext = React.createContext({
   UserInfo: [],
   StoreInfo: "",
   CompleteLoad: undefined,
+  setUpdateUserAddress: undefined,
+  // last page
+  LastPage: "",
+  SetLastPage: "",
 });
 
 export default UserContext;

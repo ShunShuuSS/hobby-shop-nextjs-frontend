@@ -1,6 +1,11 @@
 import { useRouter } from "next/router";
 
-const NotificationAddProductSuccess = ({ show }) => {
+const NotificationManageProductSuccess = ({
+  show,
+  text,
+  goToRouteText,
+  goToRoute,
+}) => {
   const router = useRouter();
   return (
     <>
@@ -16,7 +21,7 @@ const NotificationAddProductSuccess = ({ show }) => {
           >
             <div className="p-6 space-y-6">
               <p className="text-center text-[20px] leading-relaxed text-gray-500 dark:text-gray-400">
-                Produk berhasil ditambah.
+                {text}
               </p>
             </div>
             <div className="flex justify-center p-6 space-x-2">
@@ -24,9 +29,9 @@ const NotificationAddProductSuccess = ({ show }) => {
                 data-modal-toggle="defaultModal"
                 type="button"
                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                onClick={() => router.push(`/seller/manage-product`)}
+                onClick={() => router.push(goToRoute)}
               >
-                Pindah ke halaman Atur Produk
+                {goToRouteText}
               </button>
             </div>
           </div>
@@ -36,4 +41,4 @@ const NotificationAddProductSuccess = ({ show }) => {
   );
 };
 
-export default NotificationAddProductSuccess;
+export default NotificationManageProductSuccess;

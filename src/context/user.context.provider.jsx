@@ -15,19 +15,36 @@ const UserContextProvider = (props) => {
   const [completeLoad, setCompleteLoad] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
   const [userStore, setUserStore] = useState([]);
+  const [updateUserAddress, setUpdateUserAddress] = useState(false);
+  const [lastPage, setLastPage] = useState("/");
 
   const router = useRouter();
 
   useEffect(() => {
-    setCompleteLoad(false);
     const user_cookies = getCookie("user_token", {
       domain: "localhost",
       path: "/",
     })?.toString();
+
     if (user_cookies && user_cookies !== "") {
+      setCompleteLoad(false);
       _relogin(user_cookies);
     }
   }, []);
+
+  useEffect(() => {
+    if (updateUserAddress) {
+      setCompleteLoad(false);
+      console.log("jalan");
+      const user_cookies = getCookie("user_token", {
+        domain: "localhost",
+        path: "/",
+      })?.toString();
+      if (user_cookies && user_cookies !== "") {
+        _relogin(user_cookies);
+      }
+    }
+  }, [updateUserAddress]);
 
   const _relogin = async (cookie) => {
     setCompleteLoad(false);
@@ -43,7 +60,9 @@ const UserContextProvider = (props) => {
       if (relogin.length !== 0) {
         _setToken(relogin.token);
       }
-    } catch (error) {}
+    } catch (error) {
+      _removeCookies();
+    }
   };
 
   const _getUserInfo = async (token) => {
@@ -59,11 +78,14 @@ const UserContextProvider = (props) => {
 
       if (userInfo.length !== 0) {
         setUserInfo(userInfo);
+        setUpdateUserAddress(false);
         _getUserStore(token);
       } else {
+        setUpdateUserAddress(false);
         _removeCookies();
       }
     } catch (error) {
+      setUpdateUserAddress(false);
       _removeCookies();
     }
   };
@@ -114,6 +136,7 @@ const UserContextProvider = (props) => {
       domain: "localhost",
       path: "/",
     });
+    setCompleteLoad(true);
     router.reload(window.location.pathname);
   };
 
@@ -125,6 +148,9 @@ const UserContextProvider = (props) => {
         CompleteLoad: completeLoad,
         UserInfo: userInfo,
         StoreInfo: userStore,
+        setUpdateUserAddress: setUpdateUserAddress,
+        LastPage: lastPage,
+        SetLastPage: setLastPage,
       }}
     >
       {props.children}

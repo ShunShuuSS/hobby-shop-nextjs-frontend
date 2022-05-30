@@ -6,7 +6,7 @@ const Tabs = ({ children, addClass }) => {
     <>
       <div
         id="test"
-        className={`h-full border-t border-x w-[10rem] flex text-center text-[17px] hover:bg-gray-300 rounded-t-md cursor-pointer 
+        className={`h-full border-t border-x w-[10rem] flex text-center text-[17px] rounded-t-md  hover:text-white hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 px-5 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
         ${addClass}`}
       >
         <div className={`m-auto`}>{children}</div>

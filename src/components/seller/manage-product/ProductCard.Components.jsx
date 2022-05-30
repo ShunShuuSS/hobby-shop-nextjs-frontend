@@ -48,17 +48,22 @@ const ProductCard = ({ product }) => {
                       `_150` +
                       `.webp`
                 }
-                className={`object-cover w-[6rem] h-[6rem] rounded-md ring-1 ring-gray-200 ring-offset-0`}
+                className={`object-cover w-[6rem] h-[6rem] rounded-md ring-1 ring-gray-200 ring-offset-0
+                ${!product.product_status ? "opacity-50" : ""}`}
                 alt=""
               />
             </div>
             <div className={`w-[88%] block relative`}>
               <div
-                className={`text-[17px] break-words whitespace-normal overflow-hidden webkit-box webkit-box-vertical webkit-line-clamp-1 text-ellipsis`}
+                className={`text-[17px] break-words whitespace-normal overflow-hidden webkit-box webkit-box-vertical webkit-line-clamp-1 text-ellipsis
+                ${!product.product_status ? "opacity-50" : ""}`}
               >
                 {product.product_name}
               </div>
-              <div className={`flex`}>
+              <div
+                className={`flex
+                ${!product.product_status ? "opacity-50" : ""}`}
+              >
                 <div className={`w-[25%] border rounded-md`}>
                   <div className={`m-2 block`}>
                     <div className={`font-bold`}>Harga</div>

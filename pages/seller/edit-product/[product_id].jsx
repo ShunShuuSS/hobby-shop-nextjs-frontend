@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState, useContext, useEffect } from "react";
+import NotificationManageProductSuccess from "../../../src/components/seller/notification/ManageProductSuccessNotif.Components";
 import UserContext from "../../../src/context/user.context";
 
 const EditProduct = () => {
@@ -9,23 +10,23 @@ const EditProduct = () => {
   const [productNewImage, setProductNewImage] = useState([]);
   const [removedImg, setRemovedImg] = useState([]); // list of image to be deleted from DB
   const [productName, setProductName] = useState("");
-  const [productDetial, setproductDetial] = useState("");
+  const [productDetail, setproductDetail] = useState("");
   const [productQuantity, setProductQuantity] = useState(0);
   const [productPrice, setProductPrice] = useState(0);
-  const [toggleActive, setToggleActive] = useState(true);
+  const [productStatus, setProductStatus] = useState(true);
 
   // helper
-  const [checkInputIsNull, setCheckInputIsNull] = useState({
-    img: false,
-    name: false,
-    detail: false,
-    quantity: false,
-    price: false,
+  const [validationInput, setValidationInput] = useState({
+    img: true,
+    name: true,
+    detail: true,
+    quantity: true,
+    price: true,
   });
-  const [loadingInsert, setLoadingInsert] = useState({
+  const [loadingUpdate, setLoadingUpdate] = useState({
     formButton: false,
   });
-  const [inputSuccess, setInputSuccess] = useState(false);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   // useContext
   const userContext = useContext(UserContext);
@@ -60,9 +61,10 @@ const EditProduct = () => {
       ).data.data[0];
       if (productData.length !== 0) {
         setProductName(productData.product_name);
-        setproductDetial(productData.product_detail);
+        setproductDetail(productData.product_detail);
         setProductQuantity(productData.product_quantity);
         setProductPrice(productData.product_price);
+        setProductStatus(productData.product_status);
         if (productData.product_img.length) {
           for (let i = 0; i < productData.product_img.length; i++) {
             files_list.push({
@@ -76,41 +78,47 @@ const EditProduct = () => {
     } catch (error) {}
   };
 
-  // const insertNewProduct = async () => {
-  //   setLoadingInsert({ formButton: true });
-  //   let formData = new FormData();
+  const updateProduct = async () => {
+    setLoadingUpdate({ formButton: true });
+    let formData = new FormData();
 
-  //   formData.append("product_name", productName);
-  //   formData.append("product_detail", productDetial);
-  //   formData.append("product_price", productPrice);
-  //   formData.append("product_quantity", productQuantity);
-  //   formData.append("store_id", userContext.UserToken);
+    formData.append("product_name", productName);
+    formData.append("product_detail", productDetail);
+    formData.append("product_price", productPrice);
+    formData.append("product_quantity", productQuantity);
+    formData.append("product_status", productStatus ? 1 : 0);
+    formData.append("product_id", router.query.product_id);
+    formData.append("store_id", userContext.StoreInfo[0].store_id);
+    for (let i = 0; i < removedImg.length; i++) {
+      formData.append("deleted_img[]", JSON.stringify(removedImg[i]));
+    }
 
-  //   if (productImage) {
-  //     const dataTransfer = new DataTransfer();
-  //     productImage.forEach((img) => {
-  //       if (img.file) {
-  //         dataTransfer.items.add(img.file);
-  //       }
-  //     });
+    if (productNewImage.length) {
+      console.log("masuk");
+      const dataTransfer = new DataTransfer();
+      productNewImage.forEach((img) => {
+        if (img.file) {
+          dataTransfer.items.add(img.file);
+        }
+      });
 
-  //     for (let i = 0; i < dataTransfer.files.length; i++) {
-  //       formData.append("product_img_name", dataTransfer.files[i]);
-  //     }
-  //   }
+      for (let i = 0; i < dataTransfer.files.length; i++) {
+        formData.append("new_img", dataTransfer.files[i]);
+      }
+    }
 
-  //   const resultInsert = (
-  //     await axios.post(`api/product/AddNewProduct`, formData, {
-  //       headers: {
-  //         Authorization: `Bearer ${userContext.UserToken}`,
-  //       },
-  //     })
-  //   ).data.data;
+    const updateProduct = (
+      await axios.post(`api/sellerProduct/updateProductById`, formData, {
+        headers: {
+          Authorization: `Bearer ${userContext.UserToken}`,
+        },
+      })
+    ).data.data;
 
-  //   if (resultInsert.affectedRows) {
-  //     setInputSuccess(true);
-  //   }
-  // };
+    if (updateProduct.affectedRows) {
+      setUpdateSuccess(true);
+    }
+  };
 
   const HandleShowImage = (e) => {
     if (e.target && e.target.files) {
@@ -154,11 +162,54 @@ const EditProduct = () => {
 
   const HandleFormSubmit = (e) => {
     e.preventDefault();
-    console.log(productNewImage);
-    // insertNewProduct();
+
+    if (HandleValidationInput()) {
+      updateProduct();
+    }
+  };
+
+  const HandleValidationInput = () => {
+    let formIsValid = true;
+
+    if (productImage.length === 0) {
+      setValidationInput({ img: false });
+      formIsValid = false;
+    } else {
+      setValidationInput({ img: true });
+    }
+
+    if (productName == "") {
+      setValidationInput({ name: false });
+      formIsValid = false;
+    } else {
+      setValidationInput({ name: true });
+    }
+
+    if (productDetail === "") {
+      console.log("lewat");
+      setValidationInput({ detail: false });
+      formIsValid = false;
+    } else {
+      setValidationInput({ detail: true });
+    }
+
+    if (productPrice === 0) {
+      setValidationInput({ price: false });
+      formIsValid = false;
+    } else {
+      setValidationInput({ price: true });
+    }
+
+    return formIsValid;
   };
   return (
     <>
+      <NotificationManageProductSuccess
+        show={updateSuccess}
+        text={`Produk berhasil diubah.`}
+        goToRouteText={`Pindah ke halaman Atur Produk`}
+        goToRoute={`/seller/manage-product`}
+      />
       <div className={``}>
         <div className={`text-[25px]`}>Tambah Produk</div>
         <div className={`border rounded-md p-3 border-blue-600`}>
@@ -225,7 +276,9 @@ const EditProduct = () => {
                   </>
                 ) : null}
               </div>
-              <div className={`text-red-600`}>Jumlah foto maksimal 5 buah</div>
+              <div className={`text-red-600`}>
+                Min. jumlah foto 1 buah, max 5 buah
+              </div>
             </div>
           </div>
 
@@ -238,6 +291,13 @@ const EditProduct = () => {
                 onChange={(e) => setProductName(e.target.value)}
                 value={productName}
               />
+              {validationInput.name == false ? (
+                <>
+                  <div className={`text-red-600`}>
+                    Judul produk tidak boleh kosong.
+                  </div>
+                </>
+              ) : null}
             </div>
             <div>
               <div>Detail Produk</div>
@@ -246,9 +306,16 @@ const EditProduct = () => {
                 className={`border rounded-md w-full p-1 resize-none text-justify border-blue-600 focus:border-blue-600`}
                 cols="5"
                 rows="15"
-                onChange={(e) => setproductDetial(e.target.value)}
-                value={productDetial}
-              ></textarea>
+                onChange={(e) => setproductDetail(e.target.value)}
+                value={productDetail}
+              />
+              {validationInput.detail == false ? (
+                <>
+                  <div className={`text-red-600`}>
+                    Rincian produk tidak boleh kosong.
+                  </div>
+                </>
+              ) : null}
             </div>
             <div className={`flex`}>
               <div>
@@ -259,6 +326,13 @@ const EditProduct = () => {
                   onChange={(e) => setProductPrice(e.target.value)}
                   value={productPrice}
                 />
+                {validationInput.price == false ? (
+                  <>
+                    <div className={`text-red-600`}>
+                      Harga produk tidak boleh 0 (nol).
+                    </div>
+                  </>
+                ) : null}
               </div>
               <div className={`m-1`}></div>
               <div>
@@ -279,7 +353,7 @@ const EditProduct = () => {
                   className="flex items-center cursor-pointer"
                 >
                   <div className="ml-3 text-gray-700 font-medium mr-2">
-                    {toggleActive ? "Produk Aktif" : "Produk Tidak Aktif"}
+                    {productStatus ? "Produk Aktif" : "Produk Tidak Aktif"}
                   </div>
                   <div className="relative">
                     <input
@@ -287,15 +361,15 @@ const EditProduct = () => {
                       id="toggleB"
                       className="sr-only"
                       onChange={() =>
-                        toggleActive
-                          ? setToggleActive(false)
-                          : setToggleActive(true)
+                        productStatus
+                          ? setProductStatus(false)
+                          : setProductStatus(true)
                       }
                     />
                     <div className="block bg-gray-300 w-14 h-8 rounded-full" />
                     <div
                       className={`${
-                        toggleActive ? "bg-blue-600 translate-x-full" : ""
+                        productStatus ? "bg-blue-600 translate-x-full" : ""
                       } absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition duration-300`}
                     />
                   </div>
@@ -305,10 +379,10 @@ const EditProduct = () => {
               <div className="m-1"></div>
               <button
                 type={`submit`}
-                className={`border rounded-md p-2 border-blue-600 flex mt-auto
+                className={`border w-[9rem] rounded-md p-2 border-blue-600 flex mt-auto justify-center
                 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 text-white cursor-pointer`}
               >
-                {loadingInsert.formButton ? (
+                {loadingUpdate.formButton ? (
                   <>
                     <svg
                       role="status"
@@ -328,7 +402,7 @@ const EditProduct = () => {
                     </svg>
                   </>
                 ) : (
-                  "Tambah Produk"
+                  "Simpan"
                 )}
               </button>
             </div>

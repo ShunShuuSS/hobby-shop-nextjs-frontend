@@ -10,7 +10,11 @@ const ProfileTab = ({ children }) => {
       <div className={`flex rounded-t-md h-[3.5rem] w-full`}>
         <div onClick={() => router.push(`/profile`)}>
           <Tabs
-            addClass={`${router.pathname == `/profile` ? "bg-gray-400" : ""}`}
+            addClass={`${
+              router.pathname == `/profile`
+                ? "bg-blue-700 text-white"
+                : "text-black"
+            }`}
           >
             Data Pribadi
           </Tabs>
@@ -19,7 +23,9 @@ const ProfileTab = ({ children }) => {
         <div onClick={() => router.push(`/profile/address`)}>
           <Tabs
             addClass={`${
-              router.pathname == `/profile/address` ? "bg-gray-400" : ""
+              router.pathname == `/profile/address`
+                ? "bg-blue-700 text-white"
+                : "text-black"
             }`}
           >
             Alamat
