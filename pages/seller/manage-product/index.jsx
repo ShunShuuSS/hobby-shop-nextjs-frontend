@@ -51,11 +51,23 @@ const ManageProduct = () => {
             </div>
           </div>
           <div className={`my-2`}></div>
-          {productData.map((product) => (
-            <React.Fragment key={product.product_id}>
-              <ProductCard product={product} />
-            </React.Fragment>
-          ))}
+          {productData.length ? (
+            <>
+              {productData.map((product) => (
+                <React.Fragment key={product.product_id}>
+                  <ProductCard product={product} />
+                </React.Fragment>
+              ))}
+            </>
+          ) : (
+            <>
+              <div
+                className={`h-full font-bold text-[20px] flex justify-center top-1/2`}
+              >
+                Belum ada produk
+              </div>
+            </>
+          )}
         </div>
       </TabSeller>
     </>

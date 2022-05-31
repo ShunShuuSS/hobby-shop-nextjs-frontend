@@ -3,12 +3,15 @@ import IsEmail from "isemail";
 import moment from "moment";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { forwardRef, useContext, useEffect, useState } from "react";
+import parsePhoneNumber from "libphonenumber-js";
+import PasswordValidator from "password-validator";
+import React, { forwardRef, useContext, useEffect, useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import CustomNotification from "../src/components/notification/CustomNotification.Components";
 import CustomVerificationCode from "../src/components/notification/CustomVerificationCode.Components";
 import UserContext from "../src/context/user.context";
+import capitalize from "capitalize";
 
 const RegisterPage = () => {
   const [userName, setUserName] = useState("");
@@ -19,13 +22,16 @@ const RegisterPage = () => {
   const [userPassword, setUserPassword] = useState("");
   const [userPasswordConfirm, setUserPasswordConfirm] = useState("");
   const [showUserPassword, setShowUserPassword] = useState("password");
-  const [showUserPasswordConfirm, setShowUserPasswordConfirm] =
-    useState("password");
+  const [passwordValidationMessage, setPasswordValidationMessage] = useState(
+    []
+  );
 
   const [checkUserName, setCheckUserName] = useState(true);
   const [checkUserDateOfBirth, setCheckUserDateOfBirth] = useState(true);
   const [checkUserGender, setCheckUserGender] = useState(true);
   const [checkUserHp, setCheckUserHp] = useState(true);
+  const [phonenumberRegistered, setPhonenumberRegistered] = useState(false);
+  const [phonenumberValidation, setPhonenumberValidation] = useState(true);
   const [checkUserPassword, setCheckUserPassword] = useState(true);
   const [checkUserPasswordNotNull, setCheckUserPasswordNotNull] =
     useState(true);
@@ -65,6 +71,27 @@ const RegisterPage = () => {
       {value}
     </button>
   ));
+
+  // Password Validator
+  var schemaPassword = new PasswordValidator();
+
+  schemaPassword
+    .is()
+    .min(8, "Password minimal 8 karakter") // Minimum length 8
+    .is()
+    .max(100, "Password maksimal 100 karakter") // Maximum length 100
+    .has()
+    .uppercase(1, "Password minimal memiliki 1 karakter huruf besar") // Must have uppercase letters
+    .has()
+    .lowercase(1, "Password minimal memiliki 1 karakter huruf kecil") // Must have lowercase letters
+    .has()
+    .digits(2, "Password minimal memiliki 2 angka") // Must have at least 2 digits
+    .has()
+    .not()
+    .spaces(0, "Password tidak boleh mengandung spasi") // Should not have spaces
+    .is()
+    .not()
+    .oneOf(["password", "Password", "Passw0rd", "Password123"]); // Blacklist these values
 
   const router = useRouter();
 
@@ -155,6 +182,7 @@ const RegisterPage = () => {
   const RequestEmailVerification = async () => {
     setNotifOtpExpired(false);
     setNotifVerificationNotSuccess(false);
+    setModalVerification(true);
     try {
       const emailVerification = await axios.post(
         "api/auth/request_email_verification",
@@ -167,6 +195,8 @@ const RegisterPage = () => {
         setVerificationCode(emailVerification.data.data.verification_code);
       }
     } catch (error) {
+      setNotifOtpExpired(false);
+      setNotifVerificationNotSuccess(false);
       setModalVerification(false);
     }
   };
@@ -179,10 +209,33 @@ const RegisterPage = () => {
         setNotifVerificationNotSuccess(false);
         setModalVerification(false);
         setVerificationSuccess(true);
+        UserRegister();
       } else {
         setNotifVerificationNotSuccess(true);
         setVerificationSuccess(false);
       }
+    }
+  };
+
+  // Check User Phonenumber
+  const CheckUserHp = async (phonenumber) => {
+    try {
+      const _checkUserHp = (
+        await axios.get("api/auth/checkUserPhonenumber", {
+          params: {
+            user_hp: phonenumber,
+          },
+        })
+      ).data.data;
+
+      if (_checkUserHp.length) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      handleValidation();
+      console.log("Terjadi kesalahan pada bagian pengecekan nomor telepon");
     }
   };
 
@@ -218,6 +271,7 @@ const RegisterPage = () => {
       setCheckUserName(false);
       formIsValid = false;
     } else {
+      setUserName(capitalize.words(userName));
       setCheckUserName(true);
     }
 
@@ -237,9 +291,24 @@ const RegisterPage = () => {
 
     if (userHp === "") {
       setCheckUserHp(false);
+      setPhonenumberValidation(true);
       formIsValid = false;
     } else {
-      setCheckUserHp(true);
+      const phoneNumber = parsePhoneNumber(userHp, "ID");
+      if (phoneNumber.isValid() === true) {
+        setPhonenumberValidation(true);
+        if (await CheckUserHp(phoneNumber.number)) {
+          formIsValid = false;
+          setPhonenumberRegistered(true);
+        } else {
+          setUserHp(phoneNumber.number);
+          setPhonenumberRegistered(false);
+        }
+      } else {
+        setPhonenumberValidation(false);
+        setPhonenumberRegistered(false);
+        formIsValid = false;
+      }
     }
 
     if (userPassword === "") {
@@ -247,6 +316,14 @@ const RegisterPage = () => {
       formIsValid = false;
     } else {
       setCheckUserPasswordNotNull(true);
+      if (!schemaPassword.validate(userPassword)) {
+        formIsValid = false;
+        setPasswordValidationMessage(
+          schemaPassword.validate(userPassword, { details: true })
+        );
+      } else {
+        setPasswordValidationMessage([]);
+      }
     }
 
     if (userPasswordConfirm === "") {
@@ -256,18 +333,14 @@ const RegisterPage = () => {
       setCheckUserPasswordComfirmNotNull(true);
     }
 
-    if (
-      checkUserPasswordNotNull == true &&
-      checkUserPasswordComfirmNotNull == true
-    ) {
-      if (userPassword !== userPasswordConfirm) {
+    if (userPassword !== "" && userPasswordConfirm !== "") {
+      if (userPassword === userPasswordConfirm) {
+        setCheckUserPassword(true);
+      } else {
         setCheckUserPassword(false);
         formIsValid = false;
-      } else {
-        setCheckUserPassword(true);
       }
     }
-
     return formIsValid;
   };
   return (
@@ -366,6 +439,7 @@ const RegisterPage = () => {
                           ? setCheckUserName(true)
                           : setCheckUserName(false);
                       }}
+                      value={userName}
                     />
                     <div className={`${checkUserName ? "hidden" : ""}`}>
                       <div className={`text-red-600`}>
@@ -406,7 +480,10 @@ const RegisterPage = () => {
                         id="html"
                         value="Male"
                         name="gender"
-                        onClick={(e) => setUserGender(e.target.value)}
+                        onClick={(e) => {
+                          setUserGender(e.target.value);
+                          setCheckUserGender(true);
+                        }}
                       />
                       <label htmlFor="html" className={`pl-3`}>
                         Laki-laki
@@ -420,7 +497,10 @@ const RegisterPage = () => {
                         id="css"
                         name="gender"
                         value="Female"
-                        onClick={(e) => setUserGender(e.target.value)}
+                        onClick={(e) => {
+                          setUserGender(e.target.value);
+                          setCheckUserGender(true);
+                        }}
                       />
                       <label htmlFor="css" className={`pl-3`}>
                         Perempuan
@@ -444,11 +524,29 @@ const RegisterPage = () => {
                           : setCheckUserHp(false);
                       }}
                     />
-                    <div className={`${checkUserHp ? "hidden" : ""}`}>
-                      <div className={`text-red-600`}>
-                        Nomor HP tidak boleh kosong.
-                      </div>
-                    </div>
+                    {!checkUserHp ? (
+                      <>
+                        <div className={`text-red-600`}>
+                          Nomor HP tidak boleh kosong.
+                        </div>
+                      </>
+                    ) : null}
+
+                    {phonenumberRegistered ? (
+                      <>
+                        <div className={`text-red-600`}>
+                          Nomor HP sudah terdaftar.
+                        </div>
+                      </>
+                    ) : null}
+
+                    {!phonenumberValidation ? (
+                      <>
+                        <div className={`text-red-600`}>
+                          Nomor HP tidak valid.
+                        </div>
+                      </>
+                    ) : null}
                   </div>
                   <div className={``}>
                     <div className={`text-[16px]`}>Password</div>
@@ -462,13 +560,27 @@ const RegisterPage = () => {
                           : setCheckUserPasswordNotNull(false);
                       }}
                     />
-                    <div
-                      className={`${checkUserPasswordNotNull ? "hidden" : ""}`}
-                    >
-                      <div className={`text-red-600`}>
-                        Password tidak boleh kosong.
-                      </div>
-                    </div>
+                    {!checkUserPasswordNotNull ? (
+                      <>
+                        <div className={`text-red-600`}>
+                          Password tidak boleh kosong.
+                        </div>
+                      </>
+                    ) : null}
+
+                    {passwordValidationMessage.length ? (
+                      <>
+                        {passwordValidationMessage.map((validation, index) => (
+                          <React.Fragment key={index}>
+                            <div className={`text-red-600`}>
+                              {validation.message}
+                            </div>
+                          </React.Fragment>
+                        ))}
+                      </>
+                    ) : null}
+
+                    {/* passwordValidationMessage */}
 
                     <div className={`text-[16px]`}>Konfirmasi Password</div>
                     <input

@@ -47,7 +47,7 @@ const NavigationBar = () => {
   return (
     <>
       <div
-        className={`h-[3.5rem] fixed flex z-[2] p-[0_10rem] list-none w-full shadow-[2px_2px_10px_#ececec] bg-white`}
+        className={`h-[3.5rem] fixed flex z-[2] p-[0_10rem] list-none w-full border-b border-neutral-400 shadow-[2px_2px_10px_#ececec] bg-white`}
       >
         <div className={`m-[auto_0] float-left`}>
           <Link href={`/`}>

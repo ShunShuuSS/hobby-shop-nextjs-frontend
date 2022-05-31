@@ -59,11 +59,23 @@ const Sent = () => {
         <>
           <TabSeller>
             <TabTransaction>
-              {sentTransactionData.map((transaction) => (
-                <React.Fragment key={transaction.transaction_id}>
-                  <CardTransaction transaction={transaction} />
-                </React.Fragment>
-              ))}
+              {sentTransactionData.length ? (
+                <>
+                  {sentTransactionData.map((transaction) => (
+                    <React.Fragment key={transaction.transaction_id}>
+                      <CardTransaction transaction={transaction} />
+                    </React.Fragment>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <div
+                    className={`h-full font-bold text-[20px] flex justify-center top-1/2`}
+                  >
+                    Belum ada pesanan yang dikirim
+                  </div>
+                </>
+              )}
             </TabTransaction>
           </TabSeller>
         </>

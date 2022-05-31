@@ -32,8 +32,13 @@ const CheckOutPage = () => {
     if (userContext.CompleteLoad == true) {
       if (userContext.UserToken === "") {
         router.push(`/login`);
+      } else {
+        if (cartContext.TotalPrice === 0) {
+          router.push("/cart");
+        } else {
+          CheckedProductInCartDataApi();
+        }
       }
-      CheckedProductInCartDataApi();
     }
   }, [userContext.CompleteLoad]);
 
