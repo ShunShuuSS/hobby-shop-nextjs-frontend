@@ -1,9 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import CartContext from "../../context/cart.context";
 import UserContext from "../../context/user.context";
 
-const CardQuantity = ({ productId, productQty, cartProductQty }) => {
+const CardQuantity = ({ cart_id, productId, productQty, cartProductQty }) => {
   const userContext = useContext(UserContext);
   const cartContext = useContext(CartContext);
 
@@ -32,6 +34,7 @@ const CardQuantity = ({ productId, productQty, cartProductQty }) => {
       const updateQtyInCart = await axios.post(
         `/api/cart/updateQtyInCart`,
         {
+          cart_id: cart_id,
           product_id: productId,
           cart_quantity: productQty,
         },
@@ -41,7 +44,9 @@ const CardQuantity = ({ productId, productQty, cartProductQty }) => {
           },
         }
       );
-    } catch (error) {}
+    } catch (error) {
+      console.log("error");
+    }
   };
 
   const CheckedProductInCartDataApi = async () => {

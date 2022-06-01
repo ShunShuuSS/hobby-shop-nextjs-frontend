@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import Link from "next/link";
 import React, { useContext, useEffect, useRef, useState } from "react";
@@ -23,7 +24,7 @@ const ManageProduct = () => {
 
   const getProductData = async () => {
     const getProduct = (
-      await axios.get("api/product/productByStoreId", {
+      await axios.get("api/sellerProduct/allProductByStoreId", {
         params: {
           store_id: userContext.StoreInfo[0].store_id,
         },
@@ -42,13 +43,15 @@ const ManageProduct = () => {
       <TabSeller>
         <div>
           <div className={`flex justify-end`}>
-            <div
-              className={`flex border rounded-md h-[2.5rem] bg-blue-700 text-white hover:bg-blue-800 cursor-pointer`}
-            >
-              <Link href={`/seller/add-product`}>
-                <div className={`mx-3 my-auto`}>Tambah Produk</div>
-              </Link>
-            </div>
+            <Link href={`/seller/add-product`}>
+              <a>
+                <div
+                  className={`w-full block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
+                >
+                  Tambah Produk
+                </div>
+              </a>
+            </Link>
           </div>
           <div className={`my-2`}></div>
           {productData.length ? (

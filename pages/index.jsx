@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
@@ -64,33 +65,46 @@ export default function Home() {
         goToRoute={"/"}
         refreshPage={true}
       />
-
-      <Swiper modules={[Autoplay]} pagination={true} autoplay={{ delay: 3000 }}>
-        <SwiperSlide>
-          <div className={`slide-show`}>
-            <div className={`card-slide-show`}>
-              <img src="/test.jpg" className={`img`} alt="" />
+      <div className={`h-[25rem]`}>
+        <Swiper
+          modules={[Autoplay]}
+          pagination={true}
+          autoplay={{ delay: 3000 }}
+          className="mySwiper2"
+        >
+          <SwiperSlide>
+            <div className={`relative w-full h-full pb-[3rem]`}>
+              <div
+                className={`w-auto bg-gray-200 object-cover border rounded-md mobile-s:h-[12rem] mobile-xl:h-[15rem] tablet:h-[18rem] laptop:h-[22rem]`}
+              >
+                <img
+                  src="/test.jpg"
+                  className={`m-auto h-full object-cover rounded-md`}
+                  alt=""
+                />
+              </div>
             </div>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className={`slide-show`}>
-            <div className={`card-slide-show`}>
-              <img src="/test.jpg" className={`img`} alt="" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className={`relative w-auto pb-[3rem]`}>
+              <div
+                className={`w-auto bg-gray-200 object-cover border rounded-md mobile-s:h-[12rem] mobile-xl:h-[15rem] tablet:h-[18rem] laptop:h-[22rem]`}
+              >
+                <img
+                  src="/test.jpg"
+                  className={`m-auto h-full object-cover rounded-md`}
+                  alt=""
+                />
+              </div>
             </div>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className={`slide-show`}>
-            <div className={`card-slide-show`}>
-              <img src="/test.jpg" className={`img`} alt="" />
-            </div>
-          </div>
-        </SwiperSlide>
-      </Swiper>
+          </SwiperSlide>
+        </Swiper>
+      </div>
 
       <div className={``}>
-        <div className={`product-list-index`}>
+        <div
+          className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-6`}
+        >
           {topProductLoadComplete ? (
             <>
               {topProductData.length ? (
@@ -100,6 +114,7 @@ export default function Home() {
                       <CardProduct
                         product_id={topProductList.product_id}
                         store_id={topProductList.store_id}
+                        product_img={topProductList.product_img}
                         product_name={topProductList.product_name}
                         product_price={topProductList.product_price}
                         product_rating={topProductList.product_rating}
@@ -127,7 +142,7 @@ export default function Home() {
       <div className={`mt-[2rem]`}>
         <div className={`text-[25px] mb-[2rem]`}>Produk Rekomendasi</div>
         <div className={`product-list-index`}>
-          <CardProduct></CardProduct>
+          {/* <CardProduct></CardProduct> */}
         </div>
       </div>
     </>

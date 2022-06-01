@@ -1,12 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import { checkCookies } from "cookies-next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
-import CustomNotification from "../src/components/notification/CustomNotification.Components";
-import CartContext from "../src/context/cart.context";
-import UserContext from "../src/context/user.context";
-import helper from "../src/helper";
+import CustomNotification from "../../src/components/notification/CustomNotification.Components";
+import CartContext from "../../src/context/cart.context";
+import UserContext from "../../src/context/user.context";
+import helper from "../../src/helper";
 
 const CheckOutPage = () => {
   const cartContext = useContext(CartContext);
@@ -40,6 +42,7 @@ const CheckOutPage = () => {
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userContext.CompleteLoad]);
 
   const CheckedProductInCartDataApi = async () => {

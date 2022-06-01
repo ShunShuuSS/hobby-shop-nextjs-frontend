@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react";
 import CartContext from "../../context/cart.context";
 import helper from "../../helper";

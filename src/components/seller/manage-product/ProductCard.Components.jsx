@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import helper from "../../../helper";

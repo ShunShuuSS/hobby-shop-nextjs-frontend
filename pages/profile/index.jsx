@@ -1,9 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import { checkCookies } from "cookies-next";
 import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect, useContext } from "react";
+import config from "../../constants/config";
 import CardAddress from "../../src/components/profile/CardAddress.Components";
 import ModalEditProfile from "../../src/components/profile/ModalEditProfile.Components";
 import ProfileTab from "../../src/components/profile/ProfileTab.Components";
@@ -35,10 +38,7 @@ const ProfilePage = () => {
   const loadUserPhoto = async () => {
     if (userContext.UserInfo.user_photo !== null) {
       setUserPhoto(
-        `http://localhost:5000/` +
-          userContext.UserInfo.user_photo +
-          `_150` +
-          `.webp`
+        config.imageApi + userContext.UserInfo.user_photo + `_150` + `.webp`
       );
     } else {
       if (userContext.UserInfo.user_gender === "Male") {
@@ -48,6 +48,7 @@ const ProfilePage = () => {
       }
     }
   };
+
   const uploadUserPhoto = async (e) => {
     let formData = new FormData();
 
@@ -86,7 +87,7 @@ const ProfilePage = () => {
 
   return (
     <>
-      <ModalEditProfile show={true} />
+      <ModalEditProfile show={false} />
       <ProfileTab>
         <div className={`w-[20%]`}>
           <div
@@ -166,16 +167,18 @@ const ProfilePage = () => {
           <div className={`flex bottom-0 left-0`}>
             <div>
               <Link href={`/profile/reset-password`}>
-                <div
-                  className={`h-[3rem] w-[10rem] bottom-0 left-0 flex absolute`}
-                >
-                  <button
-                    type="button"
-                    className={`w-full h-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-md px-5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
+                <a>
+                  <div
+                    className={`h-[3rem] w-[10rem] bottom-0 left-0 flex absolute`}
                   >
-                    Ubah password
-                  </button>
-                </div>
+                    <button
+                      type="button"
+                      className={`w-full h-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-md px-5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
+                    >
+                      Ubah password
+                    </button>
+                  </div>
+                </a>
               </Link>
             </div>
 

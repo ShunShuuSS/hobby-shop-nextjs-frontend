@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import { checkCookies } from "cookies-next";
 import { useRouter } from "next/router";

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import NotifCancelOrder from "./NotifCancelOrder.Components";
@@ -148,6 +149,7 @@ const CardProductTransaction = ({ transaction }) => {
                 <img
                   src="/navigationbar/navbar-white.png"
                   className="flex m-auto w-[2rem] h-[2rem]"
+                  alt=""
                 />
               </div>
             </div>

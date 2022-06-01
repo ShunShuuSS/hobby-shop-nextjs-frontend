@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import { useContext, useEffect, useState } from "react";
-import ProductCartQuantityContext from "../../context/product.cart.quantity.context";
 
 const Quantity = ({ productQty }) => {
   const [product, setProduct] = useState({

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/display-name */
 import axios from "axios";
 import IsEmail from "isemail";
 import moment from "moment";
@@ -62,6 +64,7 @@ const RegisterPage = () => {
 
   // DatePicker
   const [startDate, setStartDate] = useState(null);
+  
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
     <button
       className={`w-[50%] h-[2rem] border rounded-md p-1`}

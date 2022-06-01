@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @next/next/no-img-element */
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState, useContext, useEffect } from "react";

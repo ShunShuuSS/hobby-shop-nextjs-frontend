@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
 import ProfileNavigation from "./ProfileNavigation.Components";
@@ -69,11 +71,13 @@ const NavigationBar = () => {
           }`}
         >
           <Link href={`/cart`}>
-            <img
-              src="/navigationbar/cart.png"
-              className={`h-[3rem] w-full float-right`}
-              alt=""
-            />
+            <a>
+              <img
+                src="/navigationbar/cart.png"
+                className={`h-[3rem] w-full float-right`}
+                alt=""
+              />
+            </a>
           </Link>
         </div>
         {/* <div class="animate-pulse flex space-x-4 group relative my-auto">

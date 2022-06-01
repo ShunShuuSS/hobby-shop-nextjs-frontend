@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import Link from "next/link";
 import ReceiverInformation from "../../../src/components/seller/detail-transaction/ReceriverInformation.Components";
 import { useRouter } from "next/router";
@@ -33,6 +35,7 @@ const DetailTransaction = () => {
         }
       }
     }
+  
   }, [userContext.CompleteLoad]);
 
   const transactionById = async () => {

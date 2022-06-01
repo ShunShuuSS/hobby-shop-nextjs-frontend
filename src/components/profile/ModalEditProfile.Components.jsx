@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/display-name */
 import moment from "moment";
 import { useRouter } from "next/router";
 import { forwardRef, useContext, useEffect, useState } from "react";
