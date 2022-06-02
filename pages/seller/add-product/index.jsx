@@ -14,6 +14,7 @@ const AddProduct = () => {
   const [productQuantity, setProductQuantity] = useState(0);
   const [productPrice, setProductPrice] = useState(0);
   const [productStatus, setProductStatus] = useState(true);
+  const [inputNull, setInputNull] = useState("");
 
   // helper
   const [validationInput, setValidationInput] = useState({
@@ -52,7 +53,7 @@ const AddProduct = () => {
     formData.append("product_detail", productDetail);
     formData.append("product_price", productPrice);
     formData.append("product_quantity", productQuantity);
-    formData.append("store_id", userContext.StoreInfo[0].store_id);
+    formData.append("store_id", userContext.StoreInfo.store_id);
     formData.append("product_status", productStatus ? 1 : 0);
 
     if (productImage) {
@@ -64,13 +65,14 @@ const AddProduct = () => {
       });
 
       for (let i = 0; i < dataTransfer.files.length; i++) {
-        formData.append("product_img_name", dataTransfer.files[i]);
+        formData.append("product_img_name[]", dataTransfer.files[i]);
       }
     }
 
     const resultInsert = (
       await axios.post(`api/sellerProduct/AddNewProduct`, formData, {
         headers: {
+          "content-type": "multipart/form-data",
           Authorization: `Bearer ${userContext.UserToken}`,
         },
       })
@@ -109,12 +111,6 @@ const AddProduct = () => {
     list_of_files.splice(i, 1);
     setProductImage(list_of_files);
   };
-
-  // const HandleChangeInputName = (e) => {
-  //   if (e.target.value ) {
-  //     setProductName(e.target.value);
-  //   }
-  // }
 
   const HandleFormSubmit = (e) => {
     e.preventDefault();
@@ -190,12 +186,7 @@ const AddProduct = () => {
                           <div
                             className={`w-[9rem] absolute translate-x-2 bottom-1`}
                           >
-                            <div className={`flex justify-between`}>
-                              <img
-                                src="/assets/seller/edit.png"
-                                className={`w-[2rem] rounded-md cursor-pointer`}
-                                alt=""
-                              />
+                            <div className={`flex justify-center`}>
                               <img
                                 src="/assets/seller/trash.png"
                                 className={`w-[2rem] rounded-md cursor-pointer`}
@@ -220,8 +211,10 @@ const AddProduct = () => {
                         id={`input-photo`}
                         type="file"
                         onChange={HandleShowImage}
+                        accept={`image/*`}
                         hidden
                         multiple
+                        onClick={(e) => (e.target.value = "")}
                       />
                     </>
                   ) : null}

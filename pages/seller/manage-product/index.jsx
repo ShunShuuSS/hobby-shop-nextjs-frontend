@@ -6,9 +6,12 @@ import ProductCard from "../../../src/components/seller/manage-product/ProductCa
 import TabSeller from "../../../src/components/seller/manage-transaction/TabSeller.Components";
 import UserContext from "../../../src/context/user.context";
 import helper from "../../../src/helper";
+import ReactPaginate from "react-paginate";
 
 const ManageProduct = () => {
   const [productData, setProductData] = useState([]);
+
+  const [pageError, setPageError] = useState(false);
   const userContext = useContext(UserContext);
 
   useEffect(() => {
@@ -17,16 +20,16 @@ const ManageProduct = () => {
         if (userContext.StoreInfo.length === 0) {
           router.push("/seller/register-store");
         }
-        getProductData();
+        productDataPerPage();
       }
     }
-  }, [userContext.CompleteLoad]);
+  }, [userContext.CompleteLoad || (userContext.CompleteLoad && currentPage)]);
 
   const getProductData = async () => {
     const getProduct = (
       await axios.get("api/sellerProduct/allProductByStoreId", {
         params: {
-          store_id: userContext.StoreInfo[0].store_id,
+          store_id: userContext.StoreInfo.store_id,
         },
         headers: {
           Authorization: `Bearer ${userContext.UserToken}`,
@@ -36,6 +39,57 @@ const ManageProduct = () => {
     if (getProduct.length !== 0) {
       setProductData(getProduct);
     }
+  };
+
+  // Product per Page
+  const [countPage, setCountPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    if (userContext.CompleteLoad == true) {
+      if (userContext.UserToken !== "") {
+        productDataPerPage();
+      }
+    }
+  }, [currentPage]);
+
+  const productDataPerPage = async () => {
+    try {
+      const totalProduct = (
+        await axios.get(`api/sellerProduct/totalProductByStoreId`, {
+          params: {
+            store_id: userContext.StoreInfo.store_id,
+          },
+          headers: {
+            Authorization: `Bearer ${userContext.UserToken}`,
+          },
+        })
+      ).data.data;
+
+      if (totalProduct.length) {
+        setCountPage(Math.ceil(parseInt(totalProduct[0].total_product) / 10));
+      }
+
+      const data = (
+        await axios.get(`api/sellerProduct/productByStoreIdPerPage`, {
+          params: {
+            store_id: userContext.StoreInfo.store_id,
+            page: currentPage,
+          },
+          headers: {
+            Authorization: `Bearer ${userContext.UserToken}`,
+          },
+        })
+      ).data.data;
+
+      if (data.length) {
+        setProductData(data);
+      }
+    } catch (error) {}
+  };
+
+  const handlePageChange = (e) => {
+    setCurrentPage(e.selected + 1);
   };
 
   return (
@@ -71,6 +125,25 @@ const ManageProduct = () => {
               </div>
             </>
           )}
+          <ReactPaginate
+            nextLabel="next >"
+            onPageChange={handlePageChange}
+            pageRangeDisplayed={5}
+            marginPagesDisplayed={1}
+            pageCount={countPage}
+            previousLabel="< previous"
+            pageLinkClassName="bg-white border-gray-300 hover:bg-indigo-400 inline-flex items-center px-4 py-2 outline-style-1 text-sm font-medium"
+            previousClassName="relative inline-flex items-center px-2 py-2 rounded-l-md outline-style-1 border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+            previousLinkClassName=""
+            nextClassName="relative inline-flex items-center px-2 py-2 rounded-r-md outline-style-1 border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+            nextLinkClassName=""
+            breakLabel="..."
+            breakClassName="bg-white border-gray-300 text-black hover:bg-gray-50 relative inline-flex items-center px-4 py-2 outline-style-1 text-sm font-medium"
+            breakLinkClassName=""
+            containerClassName="bg-white px-4 py-3 flex items-center justify-end border-t border-gray-200 sm:px-6"
+            activeLinkClassName="bg-indigo-200 border-indigo-500 text-black"
+            renderOnZeroPageCount={null}
+          />
         </div>
       </TabSeller>
     </>

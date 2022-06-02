@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import UserContext from "./user.context";
 import { useContext, useState, useEffect } from "react";
 import axios from "axios";
@@ -9,6 +10,7 @@ import {
 } from "cookies-next";
 import { useRouter } from "next/router";
 import moment from "moment";
+import config from "../../constants/config";
 
 const UserContextProvider = (props) => {
   const [userToken, setUserToken] = useState("");
@@ -22,8 +24,7 @@ const UserContextProvider = (props) => {
 
   useEffect(() => {
     const user_cookies = getCookie("user_token", {
-      domain: "localhost",
-      path: "/",
+      ...config.cookies_domain,
     })?.toString();
 
     if (user_cookies && user_cookies !== "") {
@@ -37,8 +38,7 @@ const UserContextProvider = (props) => {
       setCompleteLoad(false);
       console.log("jalan");
       const user_cookies = getCookie("user_token", {
-        domain: "localhost",
-        path: "/",
+        ...config.cookies_domain,
       })?.toString();
       if (user_cookies && user_cookies !== "") {
         _relogin(user_cookies);
@@ -102,17 +102,18 @@ const UserContextProvider = (props) => {
       ).data.data;
 
       if (checkUserStore.length !== 0) {
-        setUserStore(checkUserStore);
+        setUserStore(checkUserStore[0]);
       }
       _setNewCookies(token);
-    } catch (error) {}
+    } catch (error) {
+      _removeCookies();
+    }
   };
 
   const _setNewCookies = (token) => {
     setCompleteLoad(false);
     setCookies("user_token", token, {
-      domain: "localhost",
-      path: "/",
+      ...config.cookies_domain,
       maxAge: 30 * 24 * 60 * 60,
     });
     setUserToken(token);
@@ -133,8 +134,7 @@ const UserContextProvider = (props) => {
   const _removeCookies = () => {
     setCompleteLoad(false);
     removeCookies("user_token", {
-      domain: "localhost",
-      path: "/",
+      ...config.cookies_domain,
     });
     setCompleteLoad(true);
     router.reload(window.location.pathname);

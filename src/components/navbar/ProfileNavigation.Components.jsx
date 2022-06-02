@@ -4,6 +4,7 @@ import { checkCookies, removeCookies } from "cookies-next";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
+import config from "../../../constants/config";
 import UserContext from "../../context/user.context";
 import ProfileNavigationOption from "./ProfileNavigationOption.Components";
 const ProfileNavigation = () => {
@@ -27,16 +28,15 @@ const ProfileNavigation = () => {
     }
   }, [userContext.CompleteLoad]);
 
+  // Logout Session
   const removeUserCookies = () => {
     if (
       checkCookies("user_token", {
-        domain: "localhost",
-        path: "/",
+        ...config.cookies_domain,
       })
     ) {
       removeCookies("user_token", {
-        domain: "localhost",
-        path: "/",
+        ...config.cookies_domain,
       });
       router.reload(window.location.pathname);
     }

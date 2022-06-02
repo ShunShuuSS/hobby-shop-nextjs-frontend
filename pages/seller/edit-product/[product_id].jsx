@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState, useContext, useEffect } from "react";
+import config from "../../../constants/config";
 import NotificationManageProductSuccess from "../../../src/components/seller/notification/ManageProductSuccessNotif.Components";
 import UserContext from "../../../src/context/user.context";
 
@@ -54,7 +55,7 @@ const EditProduct = () => {
         await axios.get(`api/sellerProduct/getProduct`, {
           params: {
             product_id: router.query.product_id,
-            store_id: userContext.StoreInfo[0].store_id,
+            store_id: userContext.StoreInfo.store_id,
           },
           headers: {
             Authorization: `Bearer ${userContext.UserToken}`,
@@ -90,39 +91,44 @@ const EditProduct = () => {
     formData.append("product_quantity", productQuantity);
     formData.append("product_status", productStatus ? 1 : 0);
     formData.append("product_id", router.query.product_id);
-    formData.append("store_id", userContext.StoreInfo[0].store_id);
+    formData.append("store_id", userContext.StoreInfo.store_id);
     for (let i = 0; i < removedImg.length; i++) {
       formData.append("deleted_img[]", JSON.stringify(removedImg[i]));
     }
 
-    if (productNewImage.length) {
-      console.log("masuk");
-      const dataTransfer = new DataTransfer();
-      productNewImage.forEach((img) => {
-        if (img.file) {
-          dataTransfer.items.add(img.file);
+    try {
+      if (productNewImage.length) {
+        const dataTransfer = new DataTransfer();
+        productNewImage.forEach((img) => {
+          if (img.file) {
+            dataTransfer.items.add(img.file);
+          }
+        });
+
+        for (let i = 0; i < dataTransfer.files.length; i++) {
+          formData.append("new_img[]", dataTransfer.files[i]);
         }
-      });
-
-      for (let i = 0; i < dataTransfer.files.length; i++) {
-        formData.append("new_img", dataTransfer.files[i]);
       }
-    }
 
-    const updateProduct = (
-      await axios.post(`api/sellerProduct/updateProductById`, formData, {
-        headers: {
-          Authorization: `Bearer ${userContext.UserToken}`,
-        },
-      })
-    ).data.data;
+      const updateProduct = (
+        await axios.post(`api/sellerProduct/updateProductById`, formData, {
+          headers: {
+            "content-type": "multipart/form-data",
+            Authorization: `Bearer ${userContext.UserToken}`,
+          },
+        })
+      ).data.data;
 
-    if (updateProduct.affectedRows) {
-      setUpdateSuccess(true);
+      if (updateProduct.affectedRows) {
+        setUpdateSuccess(true);
+      }
+    } catch (error) {
+      console.log("error");
     }
   };
 
   const HandleShowImage = (e) => {
+    console.log(e.target.files);
     if (e.target && e.target.files) {
       var files_length = 0;
       if (productImage.length <= 5) {
@@ -227,7 +233,7 @@ const EditProduct = () => {
                       <img
                         src={
                           img.url === ""
-                            ? `http://localhost:5000/` +
+                            ? config.imageApi +
                               img.product_img_name +
                               `_150` +
                               `.webp`
@@ -242,12 +248,7 @@ const EditProduct = () => {
                         <div
                           className={`w-[9rem] absolute translate-x-2 bottom-1`}
                         >
-                          <div className={`flex justify-between`}>
-                            <img
-                              src="/assets/seller/edit.png"
-                              className={`w-[2rem] rounded-md cursor-pointer`}
-                              alt=""
-                            />
+                          <div className={`flex justify-center`}>
                             <img
                               src="/assets/seller/trash.png"
                               className={`w-[2rem] rounded-md cursor-pointer`}
@@ -274,6 +275,7 @@ const EditProduct = () => {
                       onChange={HandleShowImage}
                       hidden
                       multiple
+                      onClick={(e) => (e.target.value = "")}
                     />
                   </>
                 ) : null}

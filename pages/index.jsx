@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 import Head from "next/head";
 import Link from "next/link";
@@ -21,14 +22,17 @@ import CustomNotification from "../src/components/notification/CustomNotificatio
 export default function Home() {
   const [topProductData, setTopProductData] = useState([]);
   const [topProductLoadComplete, setTopProductLoadComplete] = useState(true);
+  const [catchError, setCatchError] = useState(false);
+
+  // Recommendation Part
   const [recommendationProductData, setRecommendationProductData] = useState(
     []
   );
-  const [catchError, setCatchError] = useState(false);
   const [
     recommendationProductLoadComplete,
     setRecommendationProductLoadComplete,
   ] = useState(true);
+
   const userContext = useContext(UserContext);
 
   useEffect(() => {
@@ -42,9 +46,9 @@ export default function Home() {
         await axios.get(`api/product`, [])
       ).data.data;
       if (TopProductApi.length) {
-        setTopProductLoadComplete(true);
         setTopProductData(TopProductApi);
       }
+      setTopProductLoadComplete(true);
     } catch (error) {
       setCatchError(true);
       setTopProductLoadComplete(true);

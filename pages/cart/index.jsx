@@ -67,8 +67,8 @@ const CartPage = () => {
 
         setCartProductActive(activeProduct);
         setCartProductInactive(inactiveProduct);
-        setLoadDataComplete(true);
       }
+      setLoadDataComplete(true);
     } catch (error) {}
   };
 

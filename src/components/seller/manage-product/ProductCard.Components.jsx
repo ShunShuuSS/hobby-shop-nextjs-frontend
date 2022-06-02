@@ -1,10 +1,21 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import helper from "../../../helper";
 import Link from "next/link";
+import config from "../../../../constants/config";
 
 const ProductCard = ({ product }) => {
+  const [image, setImage] = useState("");
+  useEffect(() => {
+    if (product.product_img !== null) {
+      setImage(config.imageApi + product.product_img + `_150` + `.webp`);
+    } else {
+      setImage(`/no-image.png`);
+    }
+  }, []);
+
   const [ListProductEdit, setListProductEdit] = useState(false);
   function useOutsideAlerter(ref) {
     useEffect(() => {
@@ -41,14 +52,7 @@ const ProductCard = ({ product }) => {
           <div className={`flex justify-between`}>
             <div className={`w-[10%] h-[6rem]`}>
               <img
-                src={
-                  product.product_img === null
-                    ? `/no-image.png`
-                    : `http://localhost:5000/` +
-                      product.product_img +
-                      `_150` +
-                      `.webp`
-                }
+                src={image}
                 className={`object-cover w-[6rem] h-[6rem] rounded-md ring-1 ring-gray-200 ring-offset-0
                 ${!product.product_status ? "opacity-50" : ""}`}
                 alt=""
