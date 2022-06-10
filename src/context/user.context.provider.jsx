@@ -30,13 +30,14 @@ const UserContextProvider = (props) => {
     if (user_cookies && user_cookies !== "") {
       setCompleteLoad(false);
       _relogin(user_cookies);
+    } else {
+      setCompleteLoad(true);
     }
   }, []);
 
   useEffect(() => {
     if (updateUserAddress) {
       setCompleteLoad(false);
-      console.log("jalan");
       const user_cookies = getCookie("user_token", {
         ...config.cookies_domain,
       })?.toString();
@@ -94,7 +95,7 @@ const UserContextProvider = (props) => {
     setCompleteLoad(false);
     try {
       const checkUserStore = (
-        await axios.get("api/cart/checkUserStore", {
+        await axios.get("api/store/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

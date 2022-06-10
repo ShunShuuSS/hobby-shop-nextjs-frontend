@@ -23,6 +23,8 @@ import Quantity from "../../src/components/global/Quantity.Components";
 import UserContext from "../../src/context/user.context";
 import helper from "../../src/helper";
 import config from "../../constants/config";
+import CustomNotificationWarningClose from "../../src/components/notification/CustomNotificationWarningClose.Components";
+import CustomNotificationAddToCart from "../../src/components/notification/CustomNotificationAddToCart.Components";
 
 const ProductPage = () => {
   const router = useRouter();
@@ -36,8 +38,12 @@ const ProductPage = () => {
   const [notifQuantityExceed, setNotifQuantityExceed] = useState(false);
   const [notifQuantityMinLimit, setNotifQuantityMinLimit] = useState(false);
 
+  // AddToCart Notif Modal
+  const [openModalAddToCart, setOpenModalAddToCart] = useState(false);
+
   // Load data Notif
   const [loadProductComplete, setLoadProductComplete] = useState(false);
+  const [checkSameStore, setCheckSameStore] = useState(false);
 
   // Swiper
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -47,6 +53,7 @@ const ProductPage = () => {
 
   useEffect(() => {
     if (router.query.product_id) {
+      userContext.SetLastPage(router.asPath);
       ProductDataApi();
       NewProductDataApi();
     }
@@ -80,6 +87,7 @@ const ProductPage = () => {
           },
         })
       ).data.data;
+
       if (getProductData[0].list_product_img.length) {
         setProductImg(await loadPhoto(getProductData[0].list_product_img));
       }
@@ -94,12 +102,12 @@ const ProductPage = () => {
     let list_img = [];
     const imgData = list_product_img;
     setProductFirstImg(
-      config.imageApi + imgData[0].product_img_name + `_150` + `.webp`
+      config.imageApi + imgData[0].product_img_name + `_300` + `.webp`
     );
 
     for (let i = 1; i < imgData.length; i++) {
       list_img.push(
-        config.imageApi + imgData[i].product_img_name + `_150` + `.webp`
+        config.imageApi + imgData[i].product_img_name + `_300` + `.webp`
       );
     }
 
@@ -126,8 +134,9 @@ const ProductPage = () => {
                 },
               }
             );
-
-            console.log(addToCartApi);
+            if (addToCartApi.data.data.affectedRows) {
+              setOpenModalAddToCart(true);
+            }
           } catch (error) {}
         }
       }
@@ -192,11 +201,45 @@ const ProductPage = () => {
   const StorePage = () => {
     router.push(`/${router.query.store_id}`);
   };
+
+  const handleInsertToCart = async () => {
+    if (validationCart()) {
+      await AddToCart();
+    }
+  };
+
+  const validationCart = () => {
+    let isValid = true;
+
+    if (userContext.StoreInfo.length !== 0) {
+      if (userContext.StoreInfo.store_id === productData.store_id) {
+        setCheckSameStore(true);
+        isValid = false;
+      }
+    }
+
+    return isValid;
+  };
   return (
     <>
       <Head>
         <title>{productData.product_name}</title>
       </Head>
+
+      <CustomNotificationWarningClose
+        show={checkSameStore}
+        setCheckSameStore={setCheckSameStore}
+        text={"Ada kegiatan yang janggal."}
+      />
+
+      {openModalAddToCart ? (
+        <>
+          <CustomNotificationAddToCart
+            setOpenModalAddToCart={setOpenModalAddToCart}
+          />
+        </>
+      ) : null}
+
       {productData.product_status ? null : (
         <>
           <div className={`text-[25px] text-red-600`}>
@@ -470,7 +513,7 @@ const ProductPage = () => {
                   <div className={`mt-5`}>
                     <div
                       className={`flex rounded-md cursor-pointer`}
-                      onClick={() => AddToCart()}
+                      onClick={handleInsertToCart}
                     >
                       <button
                         className={`w-full block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
@@ -489,7 +532,7 @@ const ProductPage = () => {
           {/* <img src="" alt="" /> */}
           {/* <Link href={`/`}></Link> */}
           <div
-            className={`font-bold text-[20px] cursor-pointer mb-3 text-blue-700 hover:text-blue-900 `}
+            className={`font-bold text-[20px] cursor-pointer mt-10 mb-3 text-blue-700 hover:text-blue-900 `}
             onClick={StorePage}
           >
             {productData.store_name}

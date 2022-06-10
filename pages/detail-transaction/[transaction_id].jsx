@@ -1,14 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-
 import Link from "next/link";
-import ReceiverInformation from "../../../src/components/seller/detail-transaction/ReceriverInformation.Components";
 import { useRouter } from "next/router";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import UserContext from "../../../src/context/user.context";
+import UserContext from "../../src/context/user.context";
 import { checkCookies } from "cookies-next";
 import moment from "moment";
-import helper from "../../../src/helper";
+import helper from "../../src/helper";
 
 const DetailTransaction = () => {
   const [transactionData, setTransactionData] = useState([]);
@@ -23,24 +21,18 @@ const DetailTransaction = () => {
 
   useEffect(() => {
     if (userContext.CompleteLoad == true) {
-      if (userContext.UserToken !== "") {
-        if (userContext.StoreInfo.length !== 0) {
-          if (router.query.transaction_id) {
-            transactionById();
-          } else {
-            router.push("/seller/transaction");
-          }
-        } else {
-          router.push("/seller/register-store");
-        }
+      if (userContext.UserToken === "") {
+        router.push("login");
       }
+
+      transactionById();
     }
   }, [userContext.CompleteLoad]);
 
   const transactionById = async () => {
     try {
       const transaction = (
-        await axios.get(`api/sellerTransaction/transactionById`, {
+        await axios.get(`api/transaction/transactionById`, {
           params: {
             transaction_id: router.query.transaction_id,
           },
@@ -49,9 +41,7 @@ const DetailTransaction = () => {
           },
         })
       ).data.data[0];
-
       if (transaction.length !== 0) {
-        console.log(transaction);
         setTransactionData(transaction);
       }
     } catch (error) {}
@@ -59,11 +49,11 @@ const DetailTransaction = () => {
   return (
     <>
       <button
-        className={`flex w-[20rem] h-[3rem] mt-auto border rounded-md bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none
+        className={`flex w-[15rem] h-[3rem] mt-auto border rounded-md bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none
           focus:ring-blue-300 text-white cursor-pointer`}
-        onClick={() => router.push("/seller/manage-transaction")}
+        onClick={() => router.push("/transaction")}
       >
-        <div className={`m-auto`}>Kembali ke halaman transaksi Seller</div>
+        <div className={`m-auto`}>Kembali ke halaman transaksi</div>
       </button>
 
       <hr className={`my-3 border-black`} />

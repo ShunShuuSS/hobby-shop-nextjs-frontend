@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import config from "../../../constants/config";
+import helper from "../../helper";
 
 const CardProduct = ({
   product_id,
@@ -22,7 +23,7 @@ const CardProduct = ({
   const loadImage = () => {
     setLoadImageComplete(false);
     if (product_img !== null) {
-      setImage(config.imageApi + product_img + `_150` + `.webp`);
+      setImage(config.imageApi + product_img + `_300` + `.webp`);
     } else {
       setImage("/no-image.png");
     }
@@ -33,7 +34,7 @@ const CardProduct = ({
     <>
       <Link href={`/${store_id}/${product_id}`}>
         <a>
-          <div className={`shadow-md h-[15rem] rounded`}>
+          <div className={`shadow-md h-[16rem] rounded bg-white`}>
             <div className={`h-[8rem] relative`}>
               {loadImageComplete ? (
                 <>
@@ -68,10 +69,13 @@ const CardProduct = ({
             <div className={`m-1`}>
               <div
                 className={`titext-[13px] break-words whitespace-normal overflow-hidden webkit-box webkit-box-vertical webkit-line-clamp-2 text-ellipsistle`}
+                title={product_name}
               >
                 {product_name}
               </div>
-              <div className={`text-[16px]`}>{"Rp." + product_price}</div>
+              <div className={`text-[16px]`}>
+                {helper.rupiahCurrency(product_price)}
+              </div>
               <div className={`text-[12px]`}>Lokasi</div>
               <div className={`text-[12px]`}>
                 {product_rating == 0 ? "Belum ada rating" : product_rating}

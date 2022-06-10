@@ -13,20 +13,26 @@ const CardQuantity = ({ cart_id, productId, productQty, cartProductQty }) => {
     qty: cartProductQty,
   });
 
-  useEffect(() => {
-    CheckedProductInCartDataApi();
-  }, [product.qty]);
+  useEffect(
+    async () => {
+      await CheckedProductInCartDataApi();
+    },
+    [
+      /*product.qty*/
+    ]
+  );
 
-  const minusQty = () => {
+  const minusQty = async () => {
     if (product.qty <= 1) return;
     setProduct({ qty: product.qty - 1 });
-    updateCartQuantity(product.qty - 1);
+    console.log(product.qty);
+    await updateCartQuantity(product.qty - 1);
   };
 
-  const plusQty = () => {
+  const plusQty = async () => {
     if (product.qty >= productQty) return;
     setProduct({ qty: product.qty + 1 });
-    updateCartQuantity(product.qty + 1);
+    await updateCartQuantity(product.qty + 1);
   };
 
   const updateCartQuantity = async (productQty) => {
@@ -44,6 +50,10 @@ const CardQuantity = ({ cart_id, productId, productQty, cartProductQty }) => {
           },
         }
       );
+
+      if (updateQtyInCart.data.data.affectedRows) {
+        await CheckedProductInCartDataApi();
+      }
     } catch (error) {
       console.log("error");
     }
@@ -60,6 +70,7 @@ const CardQuantity = ({ cart_id, productId, productQty, cartProductQty }) => {
       ).data.data;
 
       if (getData.length) {
+        // console.log(getData);
         cartContext.SetListOfCheckedProduct(getData);
       } else {
         cartContext.SetListOfCheckedProduct([]);

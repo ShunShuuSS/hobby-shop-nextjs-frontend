@@ -32,7 +32,7 @@ const CardAddress = ({ address }) => {
       ).data.data;
 
       if (updateUserUseAddress.affectedRows) {
-        userContext.setUpdateUserAddress(true);
+        await userContext.setUpdateUserAddress(true);
         setUserUseAddress(address.user_address_id);
       }
     } catch (error) {}
@@ -56,6 +56,17 @@ const CardAddress = ({ address }) => {
       ).data.data;
 
       if (deleteUserAddress.affectedRows) {
+        if (userContext.UserInfo.user_id_address === address.user_address_id) {
+          const setUserAddressNull = await axios.get(
+            "api/user/setUserIdAddressNull",
+            {
+              headers: {
+                Authorization: `Bearer ${userContext.UserToken}`,
+              },
+            }
+          );
+        }
+        await userContext.setUpdateUserAddress(true);
         setDeleteAddress(true);
       }
     } catch (error) {}

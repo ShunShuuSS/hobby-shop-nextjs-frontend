@@ -13,14 +13,15 @@ import "swiper/css/autoplay";
 
 // Components
 import CardProduct from "../src/components/product/CardProduct.Components";
-import { getCookie } from "cookies-next";
+import { checkCookies, getCookie } from "cookies-next";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import UserContext from "../src/context/user.context";
 import CustomNotification from "../src/components/notification/CustomNotification.Components";
+import { useRouter } from "next/router";
 
 export default function Home() {
-  const [topProductData, setTopProductData] = useState([]);
+  const [newProductData, setNewProductData] = useState([]);
   const [topProductLoadComplete, setTopProductLoadComplete] = useState(true);
   const [catchError, setCatchError] = useState(false);
 
@@ -34,24 +35,60 @@ export default function Home() {
   ] = useState(true);
 
   const userContext = useContext(UserContext);
+  const router = useRouter();
+  // useEffect(() => {}, []);
 
   useEffect(() => {
-    TopProductApi();
-  }, []);
+    NewProductApi();
+    if (checkCookies("user_token") === false) {
+      router.push("/login");
+    } else {
+      if (userContext.CompleteLoad === true) {
+        if (userContext.UserToken !== "") {
+          recommendationProduct();
+        }
+      }
+    }
+  }, [userContext.CompleteLoad]);
 
-  const TopProductApi = async () => {
+  const NewProductApi = async () => {
     setTopProductLoadComplete(false);
     try {
-      const TopProductApi = await (
+      const newProductApi = await (
         await axios.get(`api/product`, [])
       ).data.data;
-      if (TopProductApi.length) {
-        setTopProductData(TopProductApi);
+      if (newProductApi.length) {
+        setNewProductData(newProductApi);
       }
+
       setTopProductLoadComplete(true);
     } catch (error) {
       setCatchError(true);
       setTopProductLoadComplete(true);
+    }
+  };
+
+  const recommendationProduct = async () => {
+    if (userContext.CompleteLoad === true) {
+      if (userContext.UserToken !== "") {
+        setRecommendationProductLoadComplete(false);
+        try {
+          const product = await (
+            await axios.get(`api/recommendation/basedOnTransaction`, {
+              headers: {
+                Authorization: `Bearer ${userContext.UserToken}`,
+              },
+            })
+          ).data.data;
+          if (product.length) {
+            setRecommendationProductData(product);
+          }
+          setRecommendationProductLoadComplete(true);
+        } catch (error) {
+          setCatchError(true);
+          setRecommendationProductLoadComplete(true);
+        }
+      }
     }
   };
 
@@ -82,7 +119,7 @@ export default function Home() {
                 className={`w-auto bg-gray-200 object-cover border rounded-md mobile-s:h-[12rem] mobile-xl:h-[15rem] tablet:h-[18rem] laptop:h-[22rem]`}
               >
                 <img
-                  src="/test.jpg"
+                  src="/banner/hobbyshop.jpg"
                   className={`m-auto h-full object-cover rounded-md`}
                   alt=""
                 />
@@ -95,7 +132,7 @@ export default function Home() {
                 className={`w-auto bg-gray-200 object-cover border rounded-md mobile-s:h-[12rem] mobile-xl:h-[15rem] tablet:h-[18rem] laptop:h-[22rem]`}
               >
                 <img
-                  src="/test.jpg"
+                  src="/banner/hobbyshop.jpg"
                   className={`m-auto h-full object-cover rounded-md`}
                   alt=""
                 />
@@ -111,17 +148,17 @@ export default function Home() {
         >
           {topProductLoadComplete ? (
             <>
-              {topProductData.length ? (
+              {newProductData.length ? (
                 <>
-                  {topProductData.map((topProductList) => (
-                    <div key={topProductList.product_id}>
+                  {newProductData.map((product) => (
+                    <div key={product.product_id}>
                       <CardProduct
-                        product_id={topProductList.product_id}
-                        store_id={topProductList.store_id}
-                        product_img={topProductList.product_img}
-                        product_name={topProductList.product_name}
-                        product_price={topProductList.product_price}
-                        product_rating={topProductList.product_rating}
+                        product_id={product.product_id}
+                        store_id={product.store_id}
+                        product_img={product.product_img}
+                        product_name={product.product_name}
+                        product_price={product.product_price}
+                        product_rating={product.product_rating}
                       />
                     </div>
                   ))}
@@ -143,12 +180,48 @@ export default function Home() {
           )}
         </div>
       </div>
-      <div className={`mt-[2rem]`}>
-        <div className={`text-[25px] mb-[2rem]`}>Produk Rekomendasi</div>
-        <div className={`product-list-index`}>
-          {/* <CardProduct></CardProduct> */}
-        </div>
-      </div>
+
+      {recommendationProductLoadComplete ? (
+        <>
+          {recommendationProductData.length ? (
+            <>
+              <div className={`mt-[2rem]`}>
+                <div className={`text-[25px] mb-[2rem]`}>
+                  Produk Rekomendasi
+                </div>
+                <div
+                  className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-6`}
+                >
+                  {recommendationProductData.map((product) => (
+                    <div key={product.product_id}>
+                      <CardProduct
+                        product_id={product.product_id}
+                        store_id={product.store_id}
+                        product_img={product.product_img}
+                        product_name={product.product_name}
+                        product_price={product.product_price}
+                        product_rating={product.product_rating}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : null}
+        </>
+      ) : (
+        <>
+          {[1, 2, 3, 4, 5, 6].map((index) => (
+            <React.Fragment key={index}>
+              <div className="animate-pulse flex space-x-4">
+                <div className="flex-1 space-y-6 py-1">
+                  <div className="h-[15rem] bg-slate-200 rounded"></div>
+                </div>
+              </div>
+            </React.Fragment>
+          ))}
+        </>
+      )}
     </>
   );
 }

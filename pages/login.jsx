@@ -20,7 +20,7 @@ const Login = () => {
   const userContext = useContext(UserContext);
 
   useEffect(() => {
-    if (userContext.UserToken) {
+    if (userContext.UserToken !== "") {
       Router.push(userContext.LastPage);
     }
   }, [userContext.UserToken]);

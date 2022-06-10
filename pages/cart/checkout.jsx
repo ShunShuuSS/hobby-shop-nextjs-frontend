@@ -9,6 +9,7 @@ import CustomNotification from "../../src/components/notification/CustomNotifica
 import CartContext from "../../src/context/cart.context";
 import UserContext from "../../src/context/user.context";
 import helper from "../../src/helper";
+import AddressPage from "../profile/address";
 
 const CheckOutPage = () => {
   const cartContext = useContext(CartContext);
@@ -22,26 +23,31 @@ const CheckOutPage = () => {
     error: false,
   });
 
+  // helper
+  const [modalOpenAddress, setModalOpenAddress] = useState(false);
+  const [notifAddressIsNull, setNotifAddressIsNull] = useState(false);
+
   const router = useRouter();
 
-  useEffect(() => {
-    if (checkCookies("user_token") == false) {
-      router.push("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (checkCookies("user_token") == false) {
+  //     router.push("/login");
+  //   }
+  // }, []);
 
   useEffect(() => {
-    if (userContext.CompleteLoad == true) {
-      if (userContext.UserToken === "") {
-        router.push(`/login`);
-      } else {
-        if (cartContext.TotalPrice === 0) {
-          router.push("/cart");
-        } else {
+    if (checkCookies("user_token") === false) {
+      router.push("/login");
+    } else {
+      if (userContext.CompleteLoad === true) {
+        if (userContext.UserToken !== "") {
           CheckedProductInCartDataApi();
+        } else {
+          router.push("/login");
         }
       }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userContext.CompleteLoad]);
 
@@ -58,7 +64,6 @@ const CheckOutPage = () => {
 
         if (getData.length) {
           setProductData(getData);
-          console.log(getData);
 
           var totalPrice = 0;
           var totalProduct = 0;
@@ -77,15 +82,26 @@ const CheckOutPage = () => {
 
   const AddNewTransaction = async () => {
     try {
-      console.log("coba masukin data transaksi baru");
       const addNewTransaction = (
         await axios.post(
           `api/transaction/addNewTransaction`,
           {
             transaction_total_price: totalPrice,
-            sender_address: "evelin",
-            receiver_address: "steven",
             transaction_list_product: productData,
+            receiver_name: userContext.UserInfo.receiver_name,
+            receiver_phone: userContext.UserInfo.phone_number,
+            receiver_address: userContext.UserInfo.user_address_detail.concat(
+              ", ",
+              userContext.UserInfo.kelurahan_name,
+              ", ",
+              userContext.UserInfo.kecamatan_name,
+              ", ",
+              userContext.UserInfo.kabupaten_name,
+              ", ",
+              userContext.UserInfo.provinsi_name,
+              ", ",
+              userContext.UserInfo.postal_code
+            ),
           },
           {
             headers: {
@@ -104,15 +120,31 @@ const CheckOutPage = () => {
     }
   };
 
-  const HandleSubmitTransaction = () => {
-    console.log("bayar");
-    AddNewTransaction();
+  const HandleSubmitTransaction = async () => {
+    if (validationTransaction()) {
+      await AddNewTransaction();
+    }
   };
+
+  const validationTransaction = () => {
+    let transactionIsValid = true;
+
+    if (userContext.UserInfo.user_id_address === null || "") {
+      setNotifAddressIsNull(true);
+      transactionIsValid = false;
+    } else {
+      setNotifAddressIsNull(false);
+    }
+
+    return transactionIsValid;
+  };
+
   return (
     <>
       <Head>
         <title>Checkout</title>
       </Head>
+
       <CustomNotification
         show={notifOrder.success}
         text={"Transaksi Berhasil"}
@@ -127,9 +159,74 @@ const CheckOutPage = () => {
       />
       <div className={`w-auto flex justify-between`}>
         <div className={`w-[65%]`}>
-          <div className={``}>
-            <div className={`text-[20px] font-bold`}>Alamat</div>
-            <div className={``}>alamat alamat alamat</div>
+          <div className={`flex justify-between`}>
+            <div className={`block`}>
+              <div className={`text-[25px] font-bold`}>Alamat</div>
+              {userContext.UserInfo.user_id_address !== null ? (
+                <>
+                  <div className={`border rounded-md w-[40rem] p-3`}>
+                    <div className={`text-[17px] font-bold`}>
+                      {userContext.UserInfo.receiver_name}{" "}
+                      <span>({userContext.UserInfo.phone_number})</span>
+                    </div>
+                    <div className={`text-[16px]`}>
+                      {userContext.UserInfo.user_address_detail},{" "}
+                      {userContext.UserInfo.kelurahan_name},{" "}
+                      {userContext.UserInfo.kecamatan_name},{" "}
+                      {userContext.UserInfo.kabupaten_name},{" "}
+                      {userContext.UserInfo.provinsi_name}
+                    </div>
+                    <div>Kode Pos : {userContext.UserInfo.postal_code}</div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className={`text-red-600`}>Belum ada alamat.</div>
+                </>
+              )}
+
+              {notifAddressIsNull ? (
+                <>
+                  <div className={`text-red-600`}>
+                    Buat atau pilih alamat terlebih dahulu.
+                  </div>
+                </>
+              ) : null}
+            </div>
+
+            <div
+              className={`text-[15px] my-auto font-bold text-blue-700 hover:text-blue-800 cursor-pointer`}
+              onClick={(e) => setModalOpenAddress(true)}
+            >
+              Pilih alamat
+            </div>
+            {modalOpenAddress ? (
+              <>
+                <div
+                  className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center"
+                  style={{ backgroundColor: "rgba(128, 128, 128, 0.5)" }}
+                >
+                  <div className="relative p-4 w-full max-w-7xl h-full md:h-auto">
+                    <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                      <div className="flex justify-end p-2">
+                        <button
+                          type="button"
+                          className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+                          onClick={() => setModalOpenAddress(false)}
+                        >
+                          <svg className="w-5 h-5">
+                            <path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path>
+                          </svg>
+                        </button>
+                      </div>
+                      <div className="overflow-y-auto max-h-[90vh] px-6 pb-4 space-y-6 lg:px-8 sm:pb-6 xl:pb-8">
+                        <AddressPage></AddressPage>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : null}
           </div>
           <hr className={`border-black mt-5`} />
           <div className={`block`}>

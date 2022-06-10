@@ -14,6 +14,7 @@ import CartPriceDetails from "../../src/components/cart/CartPriceDetails.Compone
 import { checkCookies } from "cookies-next";
 import UserContext from "../../src/context/user.context";
 import CartContext from "../../src/context/cart.context";
+import CardProduct from "../../src/components/product/CardProduct.Components";
 
 const CartPage = () => {
   const [cartProductActive, setCartProductActive] = useState([]);
@@ -36,9 +37,55 @@ const CartPage = () => {
           router.push(`/login`);
         }
         UserCartDataApi();
+        recommendationProduct();
       }
     }
   }, [userContext.CompleteLoad]);
+
+  // Recommendation Part
+  const [recommendationProductData, setRecommendationProductData] = useState(
+    []
+  );
+  const [
+    recommendationProductLoadComplete,
+    setRecommendationProductLoadComplete,
+  ] = useState(true);
+
+  // useEffect(() => {
+  //   if (checkCookies("user_token") === false) {
+  //     router.push("/login");
+  //   } else {
+  //     if (userContext.CompleteLoad === true) {
+  //       if (userContext.UserToken !== "") {
+  //         recommendationProduct();
+  //       }
+  //     }
+  //   }
+  // }, [userContext.CompleteLoad]);
+
+  const recommendationProduct = async () => {
+    if (userContext.CompleteLoad === true) {
+      if (userContext.UserToken !== "") {
+        setRecommendationProductLoadComplete(false);
+        try {
+          const product = await (
+            await axios.get(`api/recommendation/basedOnTransaction`, {
+              headers: {
+                Authorization: `Bearer ${userContext.UserToken}`,
+              },
+            })
+          ).data.data;
+          if (product.length) {
+            setRecommendationProductData(product);
+          }
+          setRecommendationProductLoadComplete(true);
+        } catch (error) {
+          setCatchError(true);
+          setRecommendationProductLoadComplete(true);
+        }
+      }
+    }
+  };
 
   const UserCartDataApi = async () => {
     setLoadDataComplete(false);
@@ -196,6 +243,45 @@ const CartPage = () => {
               Check out sekarang
             </button>
           </div>
+        </div>
+      </div>
+      <div className={`mt-[2rem]`}>
+        <div className={`text-[25px] mb-[2rem]`}>Produk Rekomendasi</div>
+        <div
+          className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-6`}
+        >
+          {recommendationProductLoadComplete ? (
+            <>
+              {recommendationProductData.length ? (
+                <>
+                  {recommendationProductData.map((product) => (
+                    <div key={product.product_id}>
+                      <CardProduct
+                        product_id={product.product_id}
+                        store_id={product.store_id}
+                        product_img={product.product_img}
+                        product_name={product.product_name}
+                        product_price={product.product_price}
+                        product_rating={product.product_rating}
+                      />
+                    </div>
+                  ))}
+                </>
+              ) : null}
+            </>
+          ) : (
+            <>
+              {[1, 2, 3, 4, 5, 6].map((index) => (
+                <React.Fragment key={index}>
+                  <div className="animate-pulse flex space-x-4">
+                    <div className="flex-1 space-y-6 py-1">
+                      <div className="h-[15rem] bg-slate-200 rounded"></div>
+                    </div>
+                  </div>
+                </React.Fragment>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </>

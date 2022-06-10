@@ -35,7 +35,13 @@ const TabSeller = ({ children }) => {
           </div>
           <div
             className={`w-full h-[2.5rem] rounded-b-sm flex
-            hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer`}
+            hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer
+            ${
+              router.pathname == "/seller/setting-store"
+                ? "bg-blue-700 text-white"
+                : ""
+            }`}
+            onClick={() => router.push("/seller/setting-store")}
           >
             <div className={`w-full my-auto mx-2`}>Pengaturan Toko</div>
           </div>

@@ -36,7 +36,6 @@ const CartCardProduct = ({
 
   useEffect(() => {
     CheckedProductInCartDataApi();
-    console.log("jalan");
     if (productChecked) {
       if (!productStatus || parseInt(productQty) === 0) {
         setProductChecked(0);
@@ -113,7 +112,6 @@ const CartCardProduct = ({
           }
         )
       ).data.data;
-      console.log(update);
       if (update.affectedRows) {
         setProductChecked(0);
       }

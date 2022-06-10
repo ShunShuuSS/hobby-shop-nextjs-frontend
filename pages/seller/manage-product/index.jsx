@@ -7,6 +7,8 @@ import TabSeller from "../../../src/components/seller/manage-transaction/TabSell
 import UserContext from "../../../src/context/user.context";
 import helper from "../../../src/helper";
 import ReactPaginate from "react-paginate";
+import { checkCookies } from "cookies-next";
+import { useRouter } from "next/router";
 
 const ManageProduct = () => {
   const [productData, setProductData] = useState([]);
@@ -14,13 +16,19 @@ const ManageProduct = () => {
   const [pageError, setPageError] = useState(false);
   const userContext = useContext(UserContext);
 
+  const router = useRouter();
+
   useEffect(() => {
-    if (userContext.CompleteLoad == true) {
-      if (userContext.UserToken !== "") {
-        if (userContext.StoreInfo.length === 0) {
-          router.push("/seller/register-store");
+    if (checkCookies("user_token") == false) {
+      router.push("/login");
+    } else {
+      if (userContext.CompleteLoad == true) {
+        if (userContext.UserToken !== "") {
+          if (userContext.StoreInfo.length === 0) {
+            router.push("/seller/register-store");
+          }
+          productDataPerPage();
         }
-        productDataPerPage();
       }
     }
   }, [userContext.CompleteLoad || (userContext.CompleteLoad && currentPage)]);
@@ -133,10 +141,8 @@ const ManageProduct = () => {
             pageCount={countPage}
             previousLabel="< previous"
             pageLinkClassName="bg-white border-gray-300 hover:bg-indigo-400 inline-flex items-center px-4 py-2 outline-style-1 text-sm font-medium"
-            previousClassName="relative inline-flex items-center px-2 py-2 rounded-l-md outline-style-1 border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-            previousLinkClassName=""
-            nextClassName="relative inline-flex items-center px-2 py-2 rounded-r-md outline-style-1 border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-            nextLinkClassName=""
+            previousLinkClassName="relative inline-flex items-center px-2 py-2 rounded-l-md outline-style-1 border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+            nextLinkClassName="relative inline-flex items-center px-2 py-2 rounded-r-md outline-style-1 border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
             breakLabel="..."
             breakClassName="bg-white border-gray-300 text-black hover:bg-gray-50 relative inline-flex items-center px-4 py-2 outline-style-1 text-sm font-medium"
             breakLinkClassName=""
