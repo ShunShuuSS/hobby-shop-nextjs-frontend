@@ -114,7 +114,7 @@ const Login = () => {
       ) : null}
 
       <div className={`flex justify-center w-full`}>
-        <div className={`block border rounded-md w-[25rem] py-5`}>
+        <div className={`block border border-black rounded-md w-[25rem] py-5`}>
           <div className={`text-center text-[30px]`}>Login</div>
           <form onSubmit={form}>
             <div className={`flex justify-center w-[full]`}>
@@ -174,12 +174,12 @@ const Login = () => {
                 </label>
                 <button
                   type="submit"
-                  className={`w-full border rounded-md mt-5`}
+                  className={`w-full border border-black rounded-md mt-5`}
                 >
                   <div className={`text-[20px] font-bold p-2`}>Login</div>
                 </button>
                 <div
-                  className={`w-full border rounded-md mt-5 cursor-pointer`}
+                  className={`w-full border border-black rounded-md mt-5 cursor-pointer`}
                   onClick={() => Router.push("/register")}
                 >
                   <div className={`text-[20px] font-bold p-2 text-center`}>

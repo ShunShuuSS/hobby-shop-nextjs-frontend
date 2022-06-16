@@ -128,7 +128,6 @@ const EditProduct = () => {
   };
 
   const HandleShowImage = (e) => {
-    console.log(e.target.files);
     if (e.target && e.target.files) {
       var files_length = 0;
       if (productImage.length <= 5) {
@@ -160,7 +159,6 @@ const EditProduct = () => {
     } else {
       const removedImage = [...productNewImage];
       removedImage.splice(i - productImage.length, 1);
-      console.log(removedImage);
       setProductNewImage(removedImage);
     }
     const list_of_files = [...productImage];
@@ -194,7 +192,6 @@ const EditProduct = () => {
     }
 
     if (productDetail === "") {
-      console.log("lewat");
       setValidationInput({ detail: false });
       formIsValid = false;
     } else {

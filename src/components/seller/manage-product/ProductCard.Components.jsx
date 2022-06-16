@@ -47,7 +47,7 @@ const ProductCard = ({ product }) => {
   };
   return (
     <>
-      <div className={`w-full border rounded-md mb-5`}>
+      <div className={`bg-white w-full border border-black rounded-md mb-5`}>
         <div className={`block m-3`}>
           <div className={`flex justify-between`}>
             <div className={`w-[10%] h-[6rem]`}>
@@ -69,14 +69,14 @@ const ProductCard = ({ product }) => {
                 className={`flex
                 ${!product.product_status ? "opacity-50" : ""}`}
               >
-                <div className={`w-[25%] border rounded-md`}>
+                <div className={`w-[25%] border border-black rounded-md`}>
                   <div className={`m-2 block`}>
                     <div className={`font-bold`}>Harga</div>
                     <div>{helper.rupiahCurrency(product.product_price)}</div>
                   </div>
                 </div>
                 <div className="mr-2"></div>
-                <div className={`w-[25%] border rounded-md`}>
+                <div className={`w-[25%] border border-black rounded-md`}>
                   <div className={`m-2 block`}>
                     <div className={`font-bold`}>Jumlah Stok</div>
                     <div>{product.product_quantity}</div>
@@ -112,26 +112,24 @@ const ProductCard = ({ product }) => {
                           href={`/seller/edit-product/${product.product_id}`}
                         >
                           <a
-                            className={`bg-white rounded hover:bg-gray-400 py-2 px-4 block`}
+                            className={`bg-white rounded hover:bg-blue-800 hover:text-white py-2 px-4 block`}
                           >
                             Edit
                           </a>
                         </Link>
 
-                        <Link href={`/`}>
-                          <a
-                            className={`bg-white rounded hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap`}
-                          >
-                            Nonaktifkan
-                          </a>
-                        </Link>
-                        <Link href={`/`}>
+                        {/* <a
+                          className={`bg-white rounded hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap`}
+                        >
+                          Nonaktifkan
+                        </a> */}
+                        {/* <Link href={`/`}>
                           <a
                             className={`bg-white rounded hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap`}
                           >
                             Hapus
                           </a>
-                        </Link>
+                        </Link> */}
                       </div>
                     </ul>
                   </div>

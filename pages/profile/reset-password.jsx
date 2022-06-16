@@ -39,7 +39,9 @@ const Change = () => {
         }
       );
 
-      if (resetUserPassword) {
+      if (resetUserPassword.data.data.token !== "") {
+        await userContext.SetToken(resetUserPassword.data.data.token);
+        router.push("/profile");
       }
     } catch (error) {}
   };
@@ -56,15 +58,14 @@ const Change = () => {
     }
   };
 
-  const form = (e) => {
+  const form = async (e) => {
     e.preventDefault();
     if (!newPasswordConfirm) {
       setPasswordConfirmNull(true);
     } else {
       setPasswordConfirmNull(false);
       if (newPassword === newPasswordConfirm) {
-        ResetUserPassword();
-        router.push("/profile");
+        await ResetUserPassword();
       }
     }
   };
@@ -73,7 +74,9 @@ const Change = () => {
       <div className={`w-full flex justify-center`}>
         <form onSubmit={form}>
           <div className={`flex w-full`}>
-            <div className={`w-[25rem] block border rounded-xl p-[1rem_5rem]`}>
+            <div
+              className={`w-[25rem] block border border-black rounded-xl p-[1rem_5rem]`}
+            >
               {/* <div>
                 <div className={`${confirmationDone ? "hidden" : ""}`}>
                   <div className={`text-center`}>Verifikasi Password Lama</div>
@@ -115,7 +118,7 @@ const Change = () => {
 
                 <input
                   type="password"
-                  className={`w-full border rounded-md p-2 mt-5`}
+                  className={`w-full border border-black rounded-md p-2 mt-5`}
                   onChange={(e) => setNewPassword(e.target.value)}
                 />
 
@@ -125,7 +128,7 @@ const Change = () => {
 
                 <button
                   type="button"
-                  className={`w-full border mt-5 p-2`}
+                  className={`w-full border border-zinc-500 rounded-md mt-5 p-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 text-white`}
                   onClick={() => HandleConfirmationButton()}
                 >
                   Konfirmasi
@@ -149,7 +152,10 @@ const Change = () => {
                   Password tidak boleh kosong.
                 </div>
 
-                <button type="submit" className={`w-full border mt-5 p-2`}>
+                <button
+                  type="submit"
+                  className={`w-full border border-zinc-500 rounded-md mt-5 p-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 text-white`}
+                >
                   Ubah Password
                 </button>
               </div>

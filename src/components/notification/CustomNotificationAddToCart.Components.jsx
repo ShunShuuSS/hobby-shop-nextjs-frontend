@@ -6,7 +6,11 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import UserContext from "../../context/user.context";
 import CardProduct from "../product/CardProduct.Components";
 
-const CustomNotificationAddToCart = (setOpenModalAddToCart) => {
+const CustomNotificationAddToCart = ({
+  
+  productName,
+  setOpenModalAddToCart,
+}) => {
   // Recommendation Part
   const [recommendationProductData, setRecommendationProductData] = useState(
     []
@@ -14,6 +18,12 @@ const CustomNotificationAddToCart = (setOpenModalAddToCart) => {
   const [
     recommendationProductLoadComplete,
     setRecommendationProductLoadComplete,
+  ] = useState(true);
+  const [cartRecommendationProductData, setCartRecommendationProductData] =
+    useState([]);
+  const [
+    cartRecommendationProductLoadComplete,
+    setCartRecommendationProductLoadComplete,
   ] = useState(true);
 
   const userContext = useContext(UserContext);
@@ -25,24 +35,28 @@ const CustomNotificationAddToCart = (setOpenModalAddToCart) => {
     } else {
       if (userContext.CompleteLoad === true) {
         if (userContext.UserToken !== "") {
-          recommendationProduct();
+          cartRecommendationProduct();
         }
       }
     }
   }, [userContext.CompleteLoad]);
 
-  const recommendationProduct = async () => {
+  const cartRecommendationProduct = async () => {
     if (userContext.CompleteLoad === true) {
       if (userContext.UserToken !== "") {
         setRecommendationProductLoadComplete(false);
         try {
           const product = await (
-            await axios.get(`api/recommendation/basedOnTransaction`, {
+            await axios.get(`api/cartRec/cartRecommendation`, {
+              params: {
+                product_name: productName,
+              },
               headers: {
                 Authorization: `Bearer ${userContext.UserToken}`,
               },
             })
           ).data.data;
+
           if (product.length) {
             setRecommendationProductData(product);
           }
@@ -54,6 +68,30 @@ const CustomNotificationAddToCart = (setOpenModalAddToCart) => {
       }
     }
   };
+
+  // const recommendationProduct = async () => {
+  //   if (userContext.CompleteLoad === true) {
+  //     if (userContext.UserToken !== "") {
+  //       setRecommendationProductLoadComplete(false);
+  //       try {
+  //         const product = await (
+  //           await axios.get(`api/recommendation/basedOnTransaction`, {
+  //             headers: {
+  //               Authorization: `Bearer ${userContext.UserToken}`,
+  //             },
+  //           })
+  //         ).data.data;
+  //         if (product.length) {
+  //           setRecommendationProductData(product);
+  //         }
+  //         setRecommendationProductLoadComplete(true);
+  //       } catch (error) {
+  //         setCatchError(true);
+  //         setRecommendationProductLoadComplete(true);
+  //       }
+  //     }
+  //   }
+  // };
 
   return (
     <>
@@ -98,6 +136,8 @@ const CustomNotificationAddToCart = (setOpenModalAddToCart) => {
                         {recommendationProductData.map((product) => (
                           <div key={product.product_id}>
                             <CardProduct
+                              openModalFormnotif={true}
+                              setOpenModalAddToCart={setOpenModalAddToCart}
                               product_id={product.product_id}
                               store_id={product.store_id}
                               product_img={product.product_img}

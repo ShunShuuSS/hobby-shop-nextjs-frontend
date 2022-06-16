@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect, useContext } from "react";
 import config from "../../constants/config";
 import CardAddress from "../../src/components/profile/CardAddress.Components";
+import FormEditProfile from "../../src/components/profile/FormEditProfile.Components";
 import ModalEditProfile from "../../src/components/profile/ModalEditProfile.Components";
 import ProfileTab from "../../src/components/profile/ProfileTab.Components";
 import Tabs from "../../src/components/profile/Tabs.Components";
@@ -19,6 +20,10 @@ const ProfilePage = () => {
   const [userData, setUserData] = useState([]);
   const [TabsToggle, setTabsToggle] = useState(1);
   const [userPhoto, setUserPhoto] = useState("");
+
+  // helper
+  const [openModalEditProfile, setOpenModalEditProfile] = useState(false);
+
   const userContext = useContext(UserContext);
 
   const router = useRouter();
@@ -39,9 +44,6 @@ const ProfilePage = () => {
   const loadUserPhoto = async () => {
     if (userContext.UserInfo.user_photo !== null) {
       setUserPhoto(
-        config.imageApi + userContext.UserInfo.user_photo + `_150` + `.webp`
-      );
-      console.log(
         config.imageApi + userContext.UserInfo.user_photo + `_150` + `.webp`
       );
     } else {
@@ -100,7 +102,7 @@ const ProfilePage = () => {
       <ProfileTab>
         <div className={`w-[20%]`}>
           <div
-            className={`relative w-full h-[17rem] group outline-style-1 rounded-md bg-white`}
+            className={`relative w-full h-[14rem] group outline-style-1 rounded-md bg-white`}
           >
             {userPhoto !== "" ? (
               <>
@@ -196,10 +198,18 @@ const ProfilePage = () => {
                 <button
                   type="button"
                   className={`h-[3rem] w-[10rem] text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-md px-5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
-                  onClick={() => router.push("/")}
+                  onClick={() => setOpenModalEditProfile(true)}
                 >
                   Ubah Data Diri
                 </button>
+                {openModalEditProfile ? (
+                  <>
+                    <FormEditProfile
+                      setModal={setOpenModalEditProfile}
+                      userInfo={userContext.UserInfo}
+                    />
+                  </>
+                ) : null}
               </div>
             </div>
           </div>

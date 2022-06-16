@@ -77,7 +77,7 @@ const CardAddress = ({ address }) => {
       {!deleteAddress ? (
         <>
           <div
-            className={`w-full p-2 flex justify-between border rounded-md mb-5`}
+            className={`w-full p-2 flex justify-between border rounded-md mb-5 border-black bg-white`}
           >
             <div className={`block`}>
               <div className={`font-bold text-[17px]`}>
@@ -120,7 +120,7 @@ const CardAddress = ({ address }) => {
                     )}
                   </button>
                 </div>
-                <div className={`flex justify-start`}>
+                {/* <div className={`flex justify-start`}>
                   <button
                     type="button"
                     className={`block w-[9rem] h-[2.2rem] text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
@@ -128,7 +128,7 @@ const CardAddress = ({ address }) => {
                   >
                     Ubah Alamat
                   </button>
-                </div>
+                </div> */}
                 {modalEditForm ? (
                   <>
                     <FormEditAddress

@@ -18,7 +18,6 @@ const SearchQuryPage = () => {
   }, [router.query.search]);
 
   const _searchData = async ({ searchQuery }) => {
-    console.log(searchQuery);
     const searchDataValue = await axios.get(`api/product`, {
       params: {
         search_query: searchQuery,
@@ -26,7 +25,6 @@ const SearchQuryPage = () => {
     });
   };
 
-  //   console.log(router.query.search);
   return (
     <>
       <div className={``}>

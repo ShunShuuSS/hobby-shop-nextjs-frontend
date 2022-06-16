@@ -8,6 +8,7 @@ import UserContext from "../../context/user.context";
 import { useRouter } from "next/router";
 import helper from "../../helper";
 import config from "../../../constants/config";
+import moment from "moment";
 
 const CardProductTransaction = ({ transaction }) => {
   const [otherButton, setOtherButton] = useState(false);
@@ -31,7 +32,6 @@ const CardProductTransaction = ({ transaction }) => {
   const router = useRouter();
 
   useEffect(() => {
-    // console.log(transaction.transaction_status);
     setTransactionStatus(transaction.transaction_status);
     if (transaction.transaction_req_cancel == "requested") {
       setNotifReqCancel(true);
@@ -121,7 +121,7 @@ const CardProductTransaction = ({ transaction }) => {
   return (
     <>
       <div
-        className={`w-full h-auto block border rounded-md mb-4`}
+        className={`w-full h-auto block border border-black rounded-md mb-4 bg-white`}
         onClick={() => {
           otherButton == true ? setOtherButton(false) : null;
         }}
@@ -130,6 +130,39 @@ const CardProductTransaction = ({ transaction }) => {
           <div className={`flex justify-between font-bold mb-2`}>
             <div className={`text-[16px]`}>
               {transaction.transaction_store_name}{" "}
+              <span className={`text-red-600`}>
+                {transaction.transaction_status === "pending"
+                  ? `( pesanan akan terbatalkan pada pukul ${moment(
+                      transaction.transaction_date_process_limit
+                    )
+                      .tz("Asia/Jakarta")
+                      .format("HH:mm, D MMMM YY ")})`
+                  : null}
+                {transaction.transaction_status === "processed"
+                  ? `( pesanan akan terbatalkan pada pukul ${moment(
+                      transaction.transaction_date_send_limit
+                    )
+                      .tz("Asia/Jakarta")
+                      .format("HH:mm, D MMMM YY ")})`
+                  : null}
+                {transaction.transaction_status === "sent"
+                  ? `( pesanan akan diterima pada pukul ${moment(
+                      transaction.transaction_date_sending_limit
+                    )
+                      .tz("Asia/Jakarta")
+                      .format("HH:mm, D MMMM YY ")})`
+                  : null}
+                {transaction.transaction_status === "received"
+                  ? `( akan selesai otomatis pada pukul ${moment(
+                      transaction.transaction_date_complete_limit
+                    )
+                      .tz("Asia/Jakarta")
+                      .format("HH:mm, D MMMM YY ")})`
+                  : null}
+                {transaction.transaction_status === "completed"
+                  ? `Pesanan selesai`
+                  : null}
+              </span>
               {transaction.transaction_status !== "cancel" ? (
                 <>
                   {notifReqCancel ? (
@@ -150,7 +183,7 @@ const CardProductTransaction = ({ transaction }) => {
           <div className={`w-full h-full justify-between`}>
             {transaction.transaction_list.map((transList) => (
               <React.Fragment key={transList.transaction_list_id}>
-                <div className={`flex mb-3 border rounded-md p-1`}>
+                <div className={`flex mb-3 border border-black rounded-md p-1`}>
                   <div className={`w-[7%] mr-5`}>
                     <img
                       src={
@@ -179,7 +212,7 @@ const CardProductTransaction = ({ transaction }) => {
               </React.Fragment>
             ))}
 
-            <hr className={`my-3`} />
+            <hr className={`my-3 border-black`} />
             <div className={`w-full h-[4rem] flex justify-between`}>
               <div className={`w-[25%] border border-blue-600 rounded-md`}>
                 <div className={`m-2 block`}>

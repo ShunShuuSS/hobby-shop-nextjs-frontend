@@ -24,14 +24,14 @@ const CartPriceDetails = () => {
 
   return (
     <>
-      <div className={`w-full border rounded-md`}>
+      <div className={`w-full border border-black rounded-md`}>
         <div className={`m-[1rem_2rem]`}>
           <div className={`font-bold text-[25px] pb-5`}>Rincian Jumlah</div>
           <div className={`flex justify-between`}>
             <div className={``}>Jumlah Produk</div>
             <div className={``}>{totalProduct}</div>
           </div>
-          <hr />
+          <hr className={`border-black`} />
           <div className={`flex justify-between`}>
             <div className={``}>Total Harga</div>
             <div className={``}>{helper.rupiahCurrency(totalPrice)}</div>

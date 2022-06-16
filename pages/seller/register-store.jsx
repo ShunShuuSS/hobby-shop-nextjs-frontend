@@ -117,29 +117,33 @@ const RegisterStore = () => {
   }, [inputResult]);
 
   const registerNewStore = async () => {
-    const registerNewStore = (
-      await axios.post(
-        "api/store/registerNewStore",
-        {
-          store_name: storeName,
-          provinsi_id: choosedProvinsi,
-          kabupaten_id: choosedKabupaten,
-          kecamatan_id: choosedKecamatan,
-          kelurahan_id: choosedKelurahan,
-          store_address_detial: addressDetail,
-          postal_code: postalCode,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userContext.UserToken}`,
+    try {
+      const registerNewStore = (
+        await axios.post(
+          "api/store/registerNewStore",
+          {
+            store_name: storeName,
+            provinsi_id: choosedProvinsi,
+            kabupaten_id: choosedKabupaten,
+            kecamatan_id: choosedKecamatan,
+            kelurahan_id: choosedKelurahan,
+            store_address_detail: addressDetail,
+            postal_code: postalCode,
           },
-        }
-      )
-    ).data.data;
+          {
+            headers: {
+              Authorization: `Bearer ${userContext.UserToken}`,
+            },
+          }
+        )
+      ).data.data;
 
-    if (registerNewStore.token !== "") {
-      await userContext.SetToken(registerNewStore.token);
-      setNotifRegister({ success: true });
+      if (registerNewStore.token !== "") {
+        await userContext.SetToken(registerNewStore.token);
+        setNotifRegister({ success: true });
+      }
+    } catch (error) {
+      console.log("error");
     }
   };
 

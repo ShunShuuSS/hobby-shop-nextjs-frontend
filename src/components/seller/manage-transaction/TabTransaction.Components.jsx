@@ -7,7 +7,7 @@ const TabTransaction = ({ children }) => {
   return (
     <>
       <div className={`flex`}>
-        <div className={`flex rounded-sm outline-style-1`}>
+        <div className={`flex rounded-sm outline-style-1 bg-white`}>
           <div
             className={`w-[10rem] h-[2.5rem] rounded-l-sm flex m-0
             hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer

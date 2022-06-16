@@ -81,41 +81,42 @@ const CheckOutPage = () => {
   };
 
   const AddNewTransaction = async () => {
-    try {
-      const addNewTransaction = (
-        await axios.post(
-          `api/transaction/addNewTransaction`,
-          {
-            transaction_total_price: totalPrice,
-            transaction_list_product: productData,
-            receiver_name: userContext.UserInfo.receiver_name,
-            receiver_phone: userContext.UserInfo.phone_number,
-            receiver_address: userContext.UserInfo.user_address_detail.concat(
-              ", ",
-              userContext.UserInfo.kelurahan_name,
-              ", ",
-              userContext.UserInfo.kecamatan_name,
-              ", ",
-              userContext.UserInfo.kabupaten_name,
-              ", ",
-              userContext.UserInfo.provinsi_name,
-              ", ",
-              userContext.UserInfo.postal_code
-            ),
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${userContext.UserToken}`,
-            },
-          }
-        )
-      ).data.data;
+    const receiver_address = userContext.UserInfo.user_address_detail.concat(
+      ", ",
+      userContext.UserInfo.kelurahan_name,
+      ", ",
+      userContext.UserInfo.kecamatan_name,
+      ", ",
+      userContext.UserInfo.kabupaten_name,
+      ", ",
+      userContext.UserInfo.provinsi_name,
+      ", ",
+      userContext.UserInfo.postal_code
+    );
 
-      if (addNewTransaction.affectedRows) {
+    try {
+      const addNewTransaction = await axios.post(
+        `api/transaction/addNewTransaction`,
+        {
+          transaction_total_price: totalPrice,
+          transaction_list_product: productData,
+          receiver_name: userContext.UserInfo.receiver_name,
+          receiver_phone: userContext.UserInfo.phone_number,
+          receiver_address: receiver_address,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userContext.UserToken}`,
+          },
+        }
+      );
+
+      if (addNewTransaction.data.data.affectedRows) {
         setNotifOrder({ success: true });
-        // router.push("/transaction");
       }
     } catch (error) {
+      const err = error;
+      const response = err.response?.data;
       setNotifOrder({ error: true });
     }
   };
@@ -164,7 +165,9 @@ const CheckOutPage = () => {
               <div className={`text-[25px] font-bold`}>Alamat</div>
               {userContext.UserInfo.user_id_address !== null ? (
                 <>
-                  <div className={`border rounded-md w-[40rem] p-3`}>
+                  <div
+                    className={`border border-black rounded-md w-[40rem] p-3`}
+                  >
                     <div className={`text-[17px] font-bold`}>
                       {userContext.UserInfo.receiver_name}{" "}
                       <span>({userContext.UserInfo.phone_number})</span>
@@ -249,7 +252,9 @@ const CheckOutPage = () => {
                           {product.product_name}
                         </div>
                         <div className={`flex mb-5`}>
-                          <div className={`border rounded-md w-[30%] mr-5`}>
+                          <div
+                            className={`border border-black rounded-md w-[30%] mr-5`}
+                          >
                             <div className={`m-1 flex`}>
                               <span className={`font-bold`}>
                                 Jumlah :&nbsp;
@@ -257,7 +262,9 @@ const CheckOutPage = () => {
                               {product.cart_quantity}
                             </div>
                           </div>
-                          <div className={`border rounded-md w-[45%]`}>
+                          <div
+                            className={`border border-black rounded-md w-[45%]`}
+                          >
                             <div className={`m-1`}>
                               <div className={`flex`}>
                                 <span className={`font-bold`}>
@@ -269,7 +276,9 @@ const CheckOutPage = () => {
                           </div>
                         </div>
 
-                        <div className={`border rounded-md w-[30%]`}>
+                        <div
+                          className={`border border-black rounded-md w-[30%]`}
+                        >
                           <div className={`m-1 block`}>
                             <div className={`font-bold`}>Total Harga</div>
                             <div>
@@ -290,7 +299,7 @@ const CheckOutPage = () => {
         </div>
         {/* bagian total harga */}
         <div className={`w-[30%] block`}>
-          <div className={`w-full border rounded-md`}>
+          <div className={`w-full border border-black rounded-md`}>
             <div className={`m-[1rem_2rem]`}>
               <div className={`font-bold text-[25px] pb-5`}>
                 Total Pembayaran
@@ -299,7 +308,7 @@ const CheckOutPage = () => {
                 <div className={``}>Jumlah Produk</div>
                 <div className={``}>{totalProduct}</div>
               </div>
-              <hr />
+              <hr className={`border-black`} />
               <div className={`flex justify-between`}>
                 <div className={``}>Total Harga</div>
                 <div className={``}>{helper.rupiahCurrency(totalPrice)}</div>
@@ -308,7 +317,7 @@ const CheckOutPage = () => {
           </div>
           <div className={`flex float-right mt-5`}>
             <div
-              className={`border rounded-md p-[0.6rem_4rem] cursor-pointer`}
+              className={`border bg-blue-700 hover:bg-blue-800 text-white rounded-md p-[0.6rem_4rem] cursor-pointer`}
               onClick={HandleSubmitTransaction}
             >
               Bayar

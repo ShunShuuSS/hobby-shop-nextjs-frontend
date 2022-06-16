@@ -64,10 +64,10 @@ const RegisterPage = () => {
 
   // DatePicker
   const [startDate, setStartDate] = useState(null);
-  
+
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
     <button
-      className={`w-[50%] h-[2rem] border rounded-md p-1`}
+      className={`w-[50%] h-[2rem] border border-black bg-white rounded-md p-1`}
       onClick={onClick}
       ref={ref}
     >
@@ -207,8 +207,6 @@ const RegisterPage = () => {
   const verificationOtpCode = () => {
     if (verificationCode !== "" && inputResult !== "") {
       if (verificationCode == inputResult) {
-        console.log(verificationCode);
-        console.log(inputResult);
         setNotifVerificationNotSuccess(false);
         setModalVerification(false);
         setVerificationSuccess(true);
@@ -366,7 +364,7 @@ const RegisterPage = () => {
         RequestEmailVerification={RequestEmailVerification}
       />
       <div className={`flex justify-center w-full`}>
-        <div className={`block border rounded-md w-[30rem] py-5`}>
+        <div className={`block border border-black rounded-md w-[30rem] py-5`}>
           <div className={`text-center text-[30px]`}>Daftar</div>
 
           {/* <form onSubmit={form}> */}
@@ -377,7 +375,7 @@ const RegisterPage = () => {
                 <input
                   type="text"
                   id="email"
-                  className={`w-[100%] h-[2rem] border rounded-md p-1`}
+                  className={`w-[100%] h-[2rem] border border-black rounded-md p-1`}
                   onChange={(e) => setUserEmail(e.target.value)}
                   disabled={emailCanBeUsed ? true : false}
                 />
@@ -420,7 +418,7 @@ const RegisterPage = () => {
                   <>
                     <button
                       type="button"
-                      className={`w-full border rounded-md mt-5 cursor-pointer text-[20px] font-bold p-1 text-center`}
+                      className={`w-full border border-black rounded-md mt-5 cursor-pointer text-[20px] font-bold p-1 text-center`}
                       onClick={() => emailValidation()}
                     >
                       Selanjutnya
@@ -435,7 +433,7 @@ const RegisterPage = () => {
                     <div className={`text-[16px]`}>Nama</div>
                     <input
                       type="text"
-                      className={`w-[100%] h-[2rem] border rounded-md p-1`}
+                      className={`w-[100%] h-[2rem] border border-black rounded-md p-1`}
                       onChange={(e) => {
                         setUserName(e.target.value);
                         e.target.value !== ""
@@ -519,7 +517,7 @@ const RegisterPage = () => {
                     <div className={`text-[16px]`}>Nomor Handphone</div>
                     <input
                       type="number"
-                      className={`w-[100%] h-[2rem] border rounded-md p-1 webkit-appearance`}
+                      className={`w-[100%] h-[2rem] border border-black rounded-md p-1 webkit-appearance`}
                       onChange={(e) => {
                         setUserHp(e.target.value);
                         e.target.value !== ""
@@ -555,7 +553,7 @@ const RegisterPage = () => {
                     <div className={`text-[16px]`}>Password</div>
                     <input
                       type={`${showUserPassword}`}
-                      className={`w-full h-[2rem] border rounded-md p-1`}
+                      className={`w-full h-[2rem] border border-black rounded-md p-1`}
                       onChange={(e) => {
                         setUserPassword(e.target.value);
                         e.target.value !== ""
@@ -588,7 +586,7 @@ const RegisterPage = () => {
                     <div className={`text-[16px]`}>Konfirmasi Password</div>
                     <input
                       type={`${showUserPassword}`}
-                      className={`w-full h-[2rem] border rounded-md p-1`}
+                      className={`w-full h-[2rem] border border-black rounded-md p-1`}
                       onChange={(e) => {
                         setUserPasswordConfirm(e.target.value);
                         e.target.value !== ""

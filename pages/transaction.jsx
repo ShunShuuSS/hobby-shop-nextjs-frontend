@@ -4,6 +4,7 @@ import { checkCookies } from "cookies-next";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import CardProductTransaction from "../src/components/transaction/CardProductTransaction.Components";
+import ModalRating from "../src/components/transaction/ModalRating.Components";
 import UserContext from "../src/context/user.context";
 
 const TransactionPage = () => {
@@ -17,6 +18,15 @@ const TransactionPage = () => {
 
   const userContext = useContext(UserContext);
   const router = useRouter();
+
+  // Rating Value
+  // const [ratingValue, setRatingValue] = useState(0);
+
+  // useEffect(() => {
+  //   console.log(ratingValue);
+  // }, [ratingValue]);
+
+  // End of Rating Value
 
   useEffect(() => {
     if (checkCookies("user_token") == false) {
@@ -78,6 +88,7 @@ const TransactionPage = () => {
 
   return (
     <>
+      {/* <ModalRating setRatingValue={setRatingValue} /> */}
       <div className={`flex justify-end`}>
         <div className={`my-auto mr-5 font-bold`}>Status Pesanan</div>
         <div className={`block`}>

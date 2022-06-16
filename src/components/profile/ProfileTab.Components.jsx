@@ -8,7 +8,7 @@ const ProfileTab = ({ children }) => {
   return (
     <>
       <div
-        className={`flex rounded-t-md 
+        className={`flex rounded-t-md
         ${router.pathname !== "/cart/checkout" ? "h-[3.5rem]" : ""} 
         w-full
         `}
@@ -41,7 +41,7 @@ const ProfileTab = ({ children }) => {
           </>
         ) : null}
       </div>
-      <div className={`w-full border rounded-b-md`}>
+      <div className={`w-full border border-black rounded-b-md`}>
         <div className={`m-5 flex justify-between`}>{children}</div>
       </div>
     </>

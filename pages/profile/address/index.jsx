@@ -58,7 +58,6 @@ const AddressPage = () => {
         setNewDataComing(false);
         setAddressData(rows);
       } else {
-        console.log("jalan");
         const setUserAddressNull = await axios.get(
           "api/user/setUserIdAddressNull",
           {

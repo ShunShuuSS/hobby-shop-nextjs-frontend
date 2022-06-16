@@ -50,6 +50,9 @@ const ProductPage = () => {
 
   // useContext
   const userContext = useContext(UserContext);
+  useEffect(() => {
+    setOpenModalAddToCart(false);
+  }, []);
 
   useEffect(() => {
     if (router.query.product_id) {
@@ -235,6 +238,7 @@ const ProductPage = () => {
       {openModalAddToCart ? (
         <>
           <CustomNotificationAddToCart
+            productName={productData.product_name}
             setOpenModalAddToCart={setOpenModalAddToCart}
           />
         </>
@@ -436,7 +440,7 @@ const ProductPage = () => {
           <div className={`w-[30%]`}>
             {productData.product_status ? (
               <>
-                <div className={`border rounded-md px-5 py-3`}>
+                <div className={`border border-black rounded-md px-5 py-3`}>
                   <div className={`text-center`}>Atur Jumlah</div>
                   <div className={`flex justify-center`}>
                     <div
@@ -446,7 +450,7 @@ const ProductPage = () => {
                         className={`flex items-center h-full w-[2.5rem] ${
                           cartProductQty.qty <= 1
                             ? "bg-gray-200 rounded-l-md"
-                            : ""
+                            : "bg-white rounded-l-md"
                         } `}
                         onClick={() => minusQty()}
                       >
@@ -474,12 +478,12 @@ const ProductPage = () => {
                       </div>
                       <button
                         className={`flex items-center w-[2.5rem]
-                    ${
-                      cartProductQty.qty >=
-                      parseInt(productData.product_quantity)
-                        ? "bg-gray-200 rounded-r-md"
-                        : ""
-                    }`}
+                        ${
+                          cartProductQty.qty >=
+                          parseInt(productData.product_quantity)
+                            ? "bg-gray-200 rounded-r-md"
+                            : "bg-white rounded-r-md"
+                        }`}
                         onClick={() => plusQty()}
                       >
                         <img

@@ -40,13 +40,9 @@ export default function Home() {
 
   useEffect(() => {
     NewProductApi();
-    if (checkCookies("user_token") === false) {
-      router.push("/login");
-    } else {
-      if (userContext.CompleteLoad === true) {
-        if (userContext.UserToken !== "") {
-          recommendationProduct();
-        }
+    if (userContext.CompleteLoad === true) {
+      if (userContext.UserToken !== "") {
+        recommendationProduct();
       }
     }
   }, [userContext.CompleteLoad]);
@@ -69,26 +65,22 @@ export default function Home() {
   };
 
   const recommendationProduct = async () => {
-    if (userContext.CompleteLoad === true) {
-      if (userContext.UserToken !== "") {
-        setRecommendationProductLoadComplete(false);
-        try {
-          const product = await (
-            await axios.get(`api/recommendation/basedOnTransaction`, {
-              headers: {
-                Authorization: `Bearer ${userContext.UserToken}`,
-              },
-            })
-          ).data.data;
-          if (product.length) {
-            setRecommendationProductData(product);
-          }
-          setRecommendationProductLoadComplete(true);
-        } catch (error) {
-          setCatchError(true);
-          setRecommendationProductLoadComplete(true);
-        }
+    setRecommendationProductLoadComplete(false);
+    try {
+      const product = await (
+        await axios.get(`api/recommendation/basedOnTransaction`, {
+          headers: {
+            Authorization: `Bearer ${userContext.UserToken}`,
+          },
+        })
+      ).data.data;
+      if (product.length) {
+        setRecommendationProductData(product);
       }
+      setRecommendationProductLoadComplete(true);
+    } catch (error) {
+      setCatchError(true);
+      setRecommendationProductLoadComplete(true);
     }
   };
 
@@ -119,7 +111,7 @@ export default function Home() {
                 className={`w-auto bg-gray-200 object-cover border rounded-md mobile-s:h-[12rem] mobile-xl:h-[15rem] tablet:h-[18rem] laptop:h-[22rem]`}
               >
                 <img
-                  src="/banner/hobbyshop.jpg"
+                  src="/banner/HOBBYSHOP.jpg"
                   className={`m-auto h-full object-cover rounded-md`}
                   alt=""
                 />
@@ -132,7 +124,7 @@ export default function Home() {
                 className={`w-auto bg-gray-200 object-cover border rounded-md mobile-s:h-[12rem] mobile-xl:h-[15rem] tablet:h-[18rem] laptop:h-[22rem]`}
               >
                 <img
-                  src="/banner/hobbyshop.jpg"
+                  src="/banner/HOBBYSHOP.jpg"
                   className={`m-auto h-full object-cover rounded-md`}
                   alt=""
                 />

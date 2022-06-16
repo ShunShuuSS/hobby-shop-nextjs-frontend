@@ -235,7 +235,7 @@ const CartPage = () => {
               className={`border rounded-md p-[0.6rem_2rem] ${
                 cartContext.TotalPrice === 0
                   ? "bg-blue-700/80 text-white/30"
-                  : "bg-blue-700 text-white cursor-pointer"
+                  : "bg-blue-700 hover:bg-blue-800 text-white cursor-pointer"
               }`}
               onClick={() => router.push("/cart/checkout")}
               disabled={cartContext.TotalPrice === 0 ? true : false}

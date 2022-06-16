@@ -158,7 +158,9 @@ const CardTransaction = ({ transaction }) => {
     <>
       {!transactionState.handleTransaction ? (
         <>
-          <div className={`w-full h-auto block border rounded-md mb-4`}>
+          <div
+            className={`bg-white w-full h-auto block border border-black rounded-md mb-4`}
+          >
             <div className={`block m-5`}>
               <div className={`flex justify-between font-bold mb-2`}>
                 <div className={`text-[14px] text-teal-600`}>
@@ -171,9 +173,9 @@ const CardTransaction = ({ transaction }) => {
                   ).isSameOrAfter(moment()) ? (
                     <>
                       Batas proses pukul{" "}
-                      {moment(
-                        transaction.transaction_date_process_limit
-                      ).format("HH:mm, D MMMM YY ")}
+                      {moment(transaction.transaction_date_process_limit)
+                        .tz("Asia/Jakarta")
+                        .format("HH:mm, D MMMM YY ")}
                     </>
                   ) : null}
 
@@ -183,18 +185,30 @@ const CardTransaction = ({ transaction }) => {
                   ) ? (
                     <>
                       Batas proses pukul{" "}
-                      {moment(
-                        transaction.transaction_date_process_limit
-                      ).format("HH:mm, D MMMM YY ")}
+                      {moment(transaction.transaction_date_send_limit)
+                        .tz("Asia/Jakarta")
+                        .format("HH:mm, D MMMM YY ")}
                     </>
                   ) : null}
 
                   {transaction.transaction_status == "sent" ? (
-                    <>Sedang dikirim</>
+                    <>
+                      Sedang dikirim ( sampai ditujuan pada pukul{" "}
+                      {moment(transaction.transaction_date_sending_limit)
+                        .tz("Asia/Jakarta")
+                        .format("HH:mm, D MMMM YY ")}{" "}
+                      )
+                    </>
                   ) : null}
 
                   {transaction.transaction_status == "received" ? (
-                    <>Telah diterima</>
+                    <>
+                      Telah diterima ( akan selesai otomatis pada pukul{" "}
+                      {moment(transaction.transaction_date_complete_limit)
+                        .tz("Asia/Jakarta")
+                        .format("HH:mm, D MMMM YY ")}{" "}
+                      )
+                    </>
                   ) : null}
 
                   {transaction.transaction_status == "completed" ? (
@@ -210,7 +224,9 @@ const CardTransaction = ({ transaction }) => {
               <div className={`w-full h-full justify-between`}>
                 {transaction.transaction_list.map((product) => (
                   <React.Fragment key={product.transaction_list_id}>
-                    <div className={`flex mb-3 border rounded-md p-1`}>
+                    <div
+                      className={`flex mb-3 border border-black rounded-md p-1`}
+                    >
                       <div className={`w-[7%] mr-2`}>
                         <img
                           src={
@@ -239,7 +255,7 @@ const CardTransaction = ({ transaction }) => {
                   </React.Fragment>
                 ))}
 
-                <hr className={`my-3`} />
+                <hr className={`my-3 border-black`} />
                 <div className={`w-full h-[4rem] flex justify-between`}>
                   <div className={`w-[25%] border rounded-md border-blue-600`}>
                     <div className={`m-2 block`}>

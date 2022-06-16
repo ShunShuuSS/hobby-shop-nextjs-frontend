@@ -8,7 +8,7 @@ import UserContext from "../../../src/context/user.context";
 import { useRouter } from "next/router";
 import axios from "axios";
 import config from "../../../constants/config";
-import ModalUpdateStore from "../../../src/components/seller/modalUpdateStore/modalUpdateStore.components";
+import ModalUpdateStore from "../../../src/components/seller/modalUpdateStore/ModalUpdateStore.Components";
 
 const SettingStore = () => {
   const [storeNameView, setStoreNameView] = useState("");
@@ -67,7 +67,6 @@ const SettingStore = () => {
   };
 
   const handleUploadImage = (e) => {
-    // console.log("jalan");
     uploadStorePhoto(e);
   };
 
@@ -99,7 +98,7 @@ const SettingStore = () => {
         <div className={`flex w-full`}>
           <div className={`w-[20%] mr-5`}>
             <div
-              className={`relative w-full h-[14rem] group outline-style-1 rounded-md bg-white`}
+              className={`relative w-full h-[13rem] group outline-style-1 rounded-md bg-white`}
             >
               {storeImage !== "" ? (
                 <>

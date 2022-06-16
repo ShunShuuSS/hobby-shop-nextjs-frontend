@@ -25,7 +25,6 @@ const CardQuantity = ({ cart_id, productId, productQty, cartProductQty }) => {
   const minusQty = async () => {
     if (product.qty <= 1) return;
     setProduct({ qty: product.qty - 1 });
-    console.log(product.qty);
     await updateCartQuantity(product.qty - 1);
   };
 
@@ -70,7 +69,6 @@ const CardQuantity = ({ cart_id, productId, productQty, cartProductQty }) => {
       ).data.data;
 
       if (getData.length) {
-        // console.log(getData);
         cartContext.SetListOfCheckedProduct(getData);
       } else {
         cartContext.SetListOfCheckedProduct([]);
@@ -85,7 +83,9 @@ const CardQuantity = ({ cart_id, productId, productQty, cartProductQty }) => {
       >
         <div
           className={`flex items-center h-full w-[2.5rem] ${
-            product.qty <= 1 ? "bg-gray-200 rounded-l-md" : ""
+            product.qty <= 1
+              ? "bg-gray-200 rounded-l-md"
+              : "bg-white rounded-l-md"
           } `}
           onClick={() => minusQty()}
         >
@@ -102,7 +102,9 @@ const CardQuantity = ({ cart_id, productId, productQty, cartProductQty }) => {
         </div>
         <div
           className={`flex items-center w-[2.5rem] ${
-            product.qty >= productQty ? "bg-gray-200 rounded-r-md" : ""
+            product.qty >= productQty
+              ? "bg-gray-200 rounded-r-md"
+              : "bg-white rounded-r-md"
           }`}
           onClick={() => plusQty()}
         >

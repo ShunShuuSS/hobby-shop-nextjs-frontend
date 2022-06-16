@@ -4,8 +4,10 @@ const TabSeller = ({ children }) => {
   const router = useRouter();
   return (
     <>
-      <div className={`flex`}>
-        <div className={`w-[15%] h-full block outline-style-1 rounded-sm mr-5`}>
+      <div className={`flex `}>
+        <div
+          className={`w-[15%] h-full block outline-style-1 rounded-sm mr-5 bg-white`}
+        >
           <div
             className={`w-full h-[2.5rem] rounded-t-sm flex
             hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer

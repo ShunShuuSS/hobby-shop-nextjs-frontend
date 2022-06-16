@@ -7,7 +7,6 @@ import CardProduct from "../../src/components/product/CardProduct.Components";
 
 const StorePage = () => {
   const router = useRouter();
-  console.log(router.query.store_id);
 
   // useEffect(() => { }, []);
 
