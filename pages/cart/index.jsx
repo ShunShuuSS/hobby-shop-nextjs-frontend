@@ -138,8 +138,8 @@ const CartPage = () => {
       <Head>
         <title>Keranjang</title>
       </Head>
-      <div className={`cart-page`}>
-        <div className="cart-product-section">
+      <div className={`w-auto flex justify-between`}>
+        <div className="block mobile-s:w-[100%] laptop:w-[65%]">
           {loadDataComplete ? (
             <>
               {cartProductActive.length ? (
@@ -228,27 +228,16 @@ const CartPage = () => {
             </>
           ) : null}
         </div>
-        <div className={`cart-price-details-section`}>
+        <div
+          className={`z-30 laptop:w-[30%] mobile-s:w-[100%] mobile-s:fixed mobile-s:bottom-0 mobile-s:-left-0 laptop:static`}
+        >
           <CartPriceDetails />
-          <div className={`flex float-right mt-5`}>
-            <button
-              className={`border rounded-md p-[0.6rem_2rem] ${
-                cartContext.TotalPrice === 0
-                  ? "bg-blue-700/80 text-white/30"
-                  : "bg-blue-700 hover:bg-blue-800 text-white cursor-pointer"
-              }`}
-              onClick={() => router.push("/cart/checkout")}
-              disabled={cartContext.TotalPrice === 0 ? true : false}
-            >
-              Check out sekarang
-            </button>
-          </div>
         </div>
       </div>
-      <div className={`mt-[2rem]`}>
+      <div className={`mt-[2rem] mobile-s:mb-[10rem]`}>
         <div className={`text-[25px] mb-[2rem]`}>Produk Rekomendasi</div>
         <div
-          className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-6`}
+          className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-5 laptop-l:grid-cols-6`}
         >
           {recommendationProductLoadComplete ? (
             <>

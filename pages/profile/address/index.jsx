@@ -79,7 +79,7 @@ const AddressPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ProfileTab>
-        <div className={`m-2 w-full`}>
+        <div className={`w-full`}>
           <div className={`flex justify-end`}>
             <button
               type="button"

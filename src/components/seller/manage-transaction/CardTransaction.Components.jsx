@@ -162,7 +162,9 @@ const CardTransaction = ({ transaction }) => {
             className={`bg-white w-full h-auto block border border-black rounded-md mb-4`}
           >
             <div className={`block m-5`}>
-              <div className={`flex justify-between font-bold mb-2`}>
+              <div
+                className={`mobile-s:block tablet:flex tablet:justify-between font-bold mb-2`}
+              >
                 <div className={`text-[14px] text-teal-600`}>
                   Nomor Pemesanan : {transaction.transaction_invoice}
                 </div>
@@ -221,13 +223,13 @@ const CardTransaction = ({ transaction }) => {
                 </div>
               </div>
 
-              <div className={`w-full h-full justify-between`}>
+              <div className={`block w-full h-full`}>
                 {transaction.transaction_list.map((product) => (
                   <React.Fragment key={product.transaction_list_id}>
                     <div
-                      className={`flex mb-3 border border-black rounded-md p-1`}
+                      className={`h-auto flex mb-3 border border-black rounded-md p-1`}
                     >
-                      <div className={`w-[7%] mr-2`}>
+                      <div className={`w-[5rem] h-[5rem] mr-2`}>
                         <img
                           src={
                             config.imageApi +
@@ -235,13 +237,13 @@ const CardTransaction = ({ transaction }) => {
                             `_150` +
                             `.webp`
                           }
-                          className={`w-full rounded-md`}
+                          className={`object-cover w-full rounded-md`}
                           alt=""
                         />
                       </div>
-                      <div className={`w-[90%] block relative`}>
+                      <div className={`w-auto block relative`}>
                         <div
-                          className={`text-[15px] font-bold text-justify break-words whitespace-normal overflow-hidden webkit-box webkit-box-vertical webkit-line-clamp-2 text-ellipsis`}
+                          className={`mobile-s:text-[13px] tablet:text-[15px] font-bold text-justify break-words whitespace-normal overflow-hidden webkit-box webkit-box-vertical webkit-line-clamp-2 text-ellipsis`}
                         >
                           {product.transaction_product_name}
                         </div>
@@ -256,7 +258,12 @@ const CardTransaction = ({ transaction }) => {
                 ))}
 
                 <hr className={`my-3 border-black`} />
-                <div className={`w-full h-[4rem] flex justify-between`}>
+                <div
+                  className={`w-full mobile-s:h-auto tablet:h-[4rem] mobile-s:block tablet:flex tablet:justify-between`}
+                >
+                  <div className={`flex`}>
+
+                  </div>
                   <div className={`w-[25%] border rounded-md border-blue-600`}>
                     <div className={`m-2 block`}>
                       <div className={`font-bold`}>Total Harga</div>

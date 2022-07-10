@@ -269,7 +269,7 @@ const ModalUpdateStore = ({ setOpenModal, storeInfo }) => {
   return (
     <>
       <div
-        className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center"
+        className="flex h-full overflow-y-auto overflow-x-hidden mobile-s:pt-[5rem] top-0 fixed right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center"
         style={{ backgroundColor: "rgba(128, 128, 128, 0.5)" }}
         // onClick={() => setOpenModal(false)}
       >
@@ -287,7 +287,7 @@ const ModalUpdateStore = ({ setOpenModal, storeInfo }) => {
               </button>
             </div>
             <form
-              className="overflow-y-auto max-h-[70vh] px-6 pb-4 space-y-6 lg:px-8 sm:pb-6 xl:pb-8"
+              className="overflow-y-auto max-h-[70vh] px-6 pb-4 space-y-3 lg:px-8 sm:pb-6 xl:pb-8"
               onSubmit={form}
             >
               <div className="col-span-6">

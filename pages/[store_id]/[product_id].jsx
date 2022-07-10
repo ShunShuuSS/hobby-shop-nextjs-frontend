@@ -251,13 +251,13 @@ const ProductPage = () => {
           </div>
         </>
       )}
-      <div className={`block w-full h-full`}>
+      <div className={`block w-full`}>
         <div
-          className={`w-full h-[26rem] flex justify-between relative mobile-s:block tablet:flex`}
+          className={`w-full tablet:h-auto flex justify-between relative mobile-s:block tablet:flex`}
         >
-          <div className={`w-[25%]`}>
+          <div className={`mobile-s:w-full tablet:h-auto tablet:w-[25%]`}>
             <div
-              className={`w-full border border-gray-400 bg-white rounded-md`}
+              className={`w-full mobile-s:h-[10rem] mobile-l:h-[15rem] tablet:h-auto border border-gray-400 bg-white rounded-md`}
             >
               <Swiper
                 style={{
@@ -275,13 +275,13 @@ const ProductPage = () => {
                     {productData.list_product_img?.length ? (
                       <>
                         <SwiperSlide>
-                          <div className="container-img-resize bg-white rounded-md">
+                          <div className="mobile-s:container-img-resize-mobile tablet:container-img-resize bg-white rounded-md">
                             <img src={productFirstImg} />
                           </div>
                         </SwiperSlide>
                         {productImg?.map((img, i) => (
                           <SwiperSlide key={i}>
-                            <div className="container-img-resize bg-white rounded-md">
+                            <div className="mobile-s:container-img-resize-mobile tablet:container-img-resize bg-white rounded-md">
                               <img src={img} />
                             </div>
                           </SwiperSlide>
@@ -290,7 +290,7 @@ const ProductPage = () => {
                     ) : (
                       <>
                         <SwiperSlide>
-                          <div className="container-img-resize bg-white rounded-md">
+                          <div className="mobile-s:container-img-resize-mobile tablet:container-img-resize bg-white rounded-md">
                             <img src={"/no-image.png"} />
                           </div>
                         </SwiperSlide>
@@ -321,7 +321,7 @@ const ProductPage = () => {
                 )}
               </Swiper>
             </div>
-            <div className={`w-full h-auto pt-1`}>
+            <div className={`mobile-s:hidden tablet:flex w-full h-auto pt-1`}>
               <Swiper
                 onSwiper={setThumbsSwiper}
                 spaceBetween={10}
@@ -385,12 +385,16 @@ const ProductPage = () => {
             </div>
           </div>
 
-          <div className={`w-[40%] m-0`}>
+          <div className={`mobile-s:w-full tablet:w-[40%] m-0`}>
             <div
               className={`mobile-xl:text-[20px] tablet:text-[27px] laptop:text-[30px]`}
             >
               {loadProductComplete ? (
-                <>{productData.product_name}</>
+                <>
+                  <div className="mobile-s:font-semibold">
+                    {productData.product_name}
+                  </div>
+                </>
               ) : (
                 <>
                   <div className="animate-pulse flex space-x-4">
@@ -437,7 +441,7 @@ const ProductPage = () => {
               )}
             </div>
           </div>
-          <div className={`w-[30%]`}>
+          <div className={`mobile-s:w-full tablet:w-[30%]`}>
             {productData.product_status ? (
               <>
                 <div className={`border border-black rounded-md px-5 py-3`}>
@@ -532,15 +536,11 @@ const ProductPage = () => {
             ) : null}
           </div>
         </div>
-        <div>
-          {/* <img src="" alt="" /> */}
-          {/* <Link href={`/`}></Link> */}
-          <div
-            className={`font-bold text-[20px] cursor-pointer mt-10 mb-3 text-blue-700 hover:text-blue-900 `}
-            onClick={StorePage}
-          >
-            {productData.store_name}
-          </div>
+        <div
+          className={`font-bold text-[20px] cursor-pointer my-3 text-blue-700 hover:text-blue-900 `}
+          onClick={StorePage}
+        >
+          {productData.store_name}
         </div>
         <div
           className={`block py-2 border-y rounded-t-md rounded-b-md border-blue-700`}
@@ -557,7 +557,7 @@ const ProductPage = () => {
             Produk lain dari toko
           </div>
           <div
-            className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-6`}
+            className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-5 laptop-l:grid-cols-6`}
           >
             {newProductData.length ? (
               <>

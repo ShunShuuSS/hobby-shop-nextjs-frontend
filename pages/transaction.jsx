@@ -89,7 +89,7 @@ const TransactionPage = () => {
   return (
     <>
       {/* <ModalRating setRatingValue={setRatingValue} /> */}
-      <div className={`flex justify-end`}>
+      <div className={`mobile-s:block mobile-xl:flex justify-end`}>
         <div className={`my-auto mr-5 font-bold`}>Status Pesanan</div>
         <div className={`block`}>
           <button

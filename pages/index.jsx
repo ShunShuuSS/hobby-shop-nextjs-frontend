@@ -98,7 +98,9 @@ export default function Home() {
         goToRoute={"/"}
         refreshPage={true}
       />
-      <div className={`h-[25rem]`}>
+      <div
+        className={`mobile-s:h-[15rem] mobile-xl:h-[18rem] tablet:h-[20rem] laptop:h-[25rem]`}
+      >
         <Swiper
           modules={[Autoplay]}
           pagination={true}
@@ -136,7 +138,7 @@ export default function Home() {
 
       <div className={``}>
         <div
-          className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-6`}
+          className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-5 laptop-l:grid-cols-6`}
         >
           {topProductLoadComplete ? (
             <>
@@ -182,7 +184,7 @@ export default function Home() {
                   Produk Rekomendasi
                 </div>
                 <div
-                  className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-6`}
+                  className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-5 laptop-l:grid-cols-6`}
                 >
                   {recommendationProductData.map((product) => (
                     <div key={product.product_id}>

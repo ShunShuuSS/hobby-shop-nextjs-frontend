@@ -159,15 +159,13 @@ const CheckOutPage = () => {
         goToRoute={"/cart"}
       />
       <div className={`w-auto flex justify-between`}>
-        <div className={`w-[65%]`}>
-          <div className={`flex justify-between`}>
+        <div className={`mobile-s:w-full mobile-s:pb-[30rem] laptop:w-[65%]`}>
+          <div className={`flex justify-between mobile-s:block`}>
             <div className={`block`}>
               <div className={`text-[25px] font-bold`}>Alamat</div>
               {userContext.UserInfo.user_id_address !== null ? (
                 <>
-                  <div
-                    className={`border border-black rounded-md w-[40rem] p-3`}
-                  >
+                  <div className={`border border-black rounded-md p-3`}>
                     <div className={`text-[17px] font-bold`}>
                       {userContext.UserInfo.receiver_name}{" "}
                       <span>({userContext.UserInfo.phone_number})</span>
@@ -206,10 +204,10 @@ const CheckOutPage = () => {
             {modalOpenAddress ? (
               <>
                 <div
-                  className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center"
+                  className="flex overflow-y-auto overflow-x-hidden fixed mobile-s:top-0 right-0 left-0 z-50 w-full md:inset-0 h-full justify-center items-center"
                   style={{ backgroundColor: "rgba(128, 128, 128, 0.5)" }}
                 >
-                  <div className="relative p-4 w-full max-w-7xl h-full md:h-auto">
+                  <div className="relative p-4 w-full max-w-7xl h-auto">
                     <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                       <div className="flex justify-end p-2">
                         <button
@@ -222,7 +220,7 @@ const CheckOutPage = () => {
                           </svg>
                         </button>
                       </div>
-                      <div className="overflow-y-auto max-h-[90vh] px-6 pb-4 space-y-6 lg:px-8 sm:pb-6 xl:pb-8">
+                      <div className="overflow-y-auto mobile-s:max-h-[70vh] tablet:max-h-[90vh] px-6 pb-4 space-y-6 lg:px-8 sm:pb-6 xl:pb-8">
                         <AddressPage></AddressPage>
                       </div>
                     </div>
@@ -251,9 +249,9 @@ const CheckOutPage = () => {
                         <div className={`text-[18px] font-bold`}>
                           {product.product_name}
                         </div>
-                        <div className={`flex mb-5`}>
+                        <div className={`mobile-s:block tablet:flex mb-5`}>
                           <div
-                            className={`border border-black rounded-md w-[30%] mr-5`}
+                            className={`border border-black rounded-md tablet:w-[30%] tablet:mr-5`}
                           >
                             <div className={`m-1 flex`}>
                               <span className={`font-bold`}>
@@ -263,7 +261,7 @@ const CheckOutPage = () => {
                             </div>
                           </div>
                           <div
-                            className={`border border-black rounded-md w-[45%]`}
+                            className={`border mobile-s:mt-5 border-black rounded-md tablet:w-[45%]`}
                           >
                             <div className={`m-1`}>
                               <div className={`flex`}>
@@ -277,7 +275,7 @@ const CheckOutPage = () => {
                         </div>
 
                         <div
-                          className={`border border-black rounded-md w-[30%]`}
+                          className={`border border-black rounded-md tablet:w-[30%]`}
                         >
                           <div className={`m-1 block`}>
                             <div className={`font-bold`}>Total Harga</div>
@@ -298,8 +296,12 @@ const CheckOutPage = () => {
           </div>
         </div>
         {/* bagian total harga */}
-        <div className={`w-[30%] block`}>
-          <div className={`w-full border border-black rounded-md`}>
+        <div
+          className={`block laptop:w-[30%] mobile-s:w-[100%] mobile-s:fixed mobile-s:bottom-0 mobile-s:-left-0 laptop:static`}
+        >
+          <div
+            className={`mobile-s:border-t mobile-s:border-b laptop:border border-black mobile-s:rounded-t-md laptop:rounded-md mobile-s:bg-white laptop:bg-[#f7eabc]`}
+          >
             <div className={`m-[1rem_2rem]`}>
               <div className={`font-bold text-[25px] pb-5`}>
                 Total Pembayaran
@@ -313,14 +315,14 @@ const CheckOutPage = () => {
                 <div className={``}>Total Harga</div>
                 <div className={``}>{helper.rupiahCurrency(totalPrice)}</div>
               </div>
-            </div>
-          </div>
-          <div className={`flex float-right mt-5`}>
-            <div
-              className={`border bg-blue-700 hover:bg-blue-800 text-white rounded-md p-[0.6rem_4rem] cursor-pointer`}
-              onClick={HandleSubmitTransaction}
-            >
-              Bayar
+              <div className={`flex mt-5`}>
+                <div
+                  className={`text-center mobile-s:w-full mobile-xl:w-auto laptop:w-full border bg-blue-700 hover:bg-blue-800 text-white rounded-md p-[0.6rem_4rem] cursor-pointer`}
+                  onClick={HandleSubmitTransaction}
+                >
+                  Bayar
+                </div>
+              </div>
             </div>
           </div>
         </div>

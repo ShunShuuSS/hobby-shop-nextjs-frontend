@@ -41,8 +41,8 @@ const ProfileTab = ({ children }) => {
           </>
         ) : null}
       </div>
-      <div className={`w-full border border-black rounded-b-md`}>
-        <div className={`m-5 flex justify-between`}>{children}</div>
+      <div className={`w-full h-full border border-black rounded-b-md`}>
+        <div className={`m-5 h-full`}>{children}</div>
       </div>
     </>
   );

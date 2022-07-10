@@ -82,20 +82,21 @@ const NavigationBar = () => {
   return (
     <>
       <div
-        className={`h-[3.5rem] fixed flex justify-between z-[2] p-[0_10rem] list-none w-full border-b border-neutral-400 shadow-[2px_2px_10px_#ececec] bg-white`}
+        className={`h-[3.5rem] fixed flex justify-between z-[100] mobile-s:p-[0rem_2rem] tablet:p-[0rem_4rem] laptop:p-[0rem_6rem] laptop-l:p-[0rem_10rem] list-none w-full border-b border-neutral-400 shadow-[2px_2px_10px_#ececec] bg-white`}
       >
-        <div className={`m-[auto_0] float-left`}>
+        <div className={`mobile-s:hidden tablet:flex m-[auto_0] float-left`}>
           <Link href={`/`}>
             <a className={`text-[25px]`}>HOBBYSHOP</a>
           </Link>
         </div>
-        <div className={`${navigationHide ? "hidden" : ""}`}></div>
 
         {navigationHide ? null : (
           <>
             {searchNavigationHide ? null : (
               <>
-                <div className={`m-auto p-[auto]`}>
+                <div
+                  className={`mobile-s:my-auto tablet:m-auto tablet:p-[auto]`}
+                >
                   <div className="flex justify-center">
                     <div className="xl:w-[27rem]">
                       <div className="input-group relative flex items-stretch w-full">
@@ -110,7 +111,7 @@ const NavigationBar = () => {
                           value={searchInput}
                         />
                         <button
-                          className="btn px-6 py-2.5 bg-blue-700 text-white font-medium text-xs leading-tight uppercase rounded-r shadow-md hover:bg-blue-800 hover:shadow-lg focus:bg-blue-800  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex items-center"
+                          className="btn mobile-s:px-2.5 tablet:px-6 py-2.5 bg-blue-700 text-white font-medium text-xs leading-tight uppercase rounded-r shadow-md hover:bg-blue-800 hover:shadow-lg focus:bg-blue-800  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex items-center"
                           type="button"
                           id="button-addon2"
                           onClick={searchingButton}
@@ -140,7 +141,9 @@ const NavigationBar = () => {
           </>
         )}
 
-        <div className={`flex justify-between w-[15rem]`}>
+        <div
+          className={`flex justify-between mobile-s:w-full tablet:w-[15rem]`}
+        >
           <div
             className={`w-auto float-right m-auto cursor-pointer ${
               navigationHide ? "hidden" : ""
@@ -156,9 +159,6 @@ const NavigationBar = () => {
               </a>
             </Link>
           </div>
-          {/* <div class="animate-pulse flex space-x-4 group relative my-auto">
-          <div class="rounded-full bg-slate-200 h-[2.5rem] w-[2.5rem]"></div>
-        </div> */}
 
           {loadingProfileComplete ? (
             <>

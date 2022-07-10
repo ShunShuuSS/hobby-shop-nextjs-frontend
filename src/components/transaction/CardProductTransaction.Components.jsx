@@ -121,13 +121,15 @@ const CardProductTransaction = ({ transaction }) => {
   return (
     <>
       <div
-        className={`w-full h-auto block border border-black rounded-md mb-4 bg-white`}
+        className={`w-full h-full block border border-black rounded-md mb-4 bg-white`}
         onClick={() => {
           otherButton == true ? setOtherButton(false) : null;
         }}
       >
         <div className={`block m-5`}>
-          <div className={`flex justify-between font-bold mb-2`}>
+          <div
+            className={`mobile-s:block laptop:flex justify-between font-bold mb-2`}
+          >
             <div className={`text-[16px]`}>
               {transaction.transaction_store_name}{" "}
               <span className={`text-red-600`}>
@@ -180,11 +182,11 @@ const CardProductTransaction = ({ transaction }) => {
             </div>
           </div>
 
-          <div className={`w-full h-full justify-between`}>
+          <div className={`w-full h-full`}>
             {transaction.transaction_list.map((transList) => (
               <React.Fragment key={transList.transaction_list_id}>
                 <div className={`flex mb-3 border border-black rounded-md p-1`}>
-                  <div className={`w-[7%] mr-5`}>
+                  <div className={`w-[4rem] mr-5`}>
                     <img
                       src={
                         config.imageApi +
@@ -198,23 +200,29 @@ const CardProductTransaction = ({ transaction }) => {
                   </div>
                   <div className={`w-[90%] block relative`}>
                     <div
-                      className={`text-[18px] font-bold text-justify break-words whitespace-normal overflow-hidden webkit-box webkit-box-vertical webkit-line-clamp-2 text-ellipsis`}
+                      className={`mobile-s:text-[14px] tablet:text-[18px] font-bold text-justify break-words whitespace-normal overflow-hidden webkit-box webkit-box-vertical webkit-line-clamp-2 text-ellipsis`}
                     >
                       {transList.transaction_product_name}
                     </div>
-                    <div className={`text-[16px]`}>{`Jumlah : ${
-                      transList.transaction_quantity
-                    } x ${helper.rupiahCurrency(
-                      transList.transaction_product_price
-                    )}`}</div>
+                    <div className={`mobile-s:text-[14px] tablet:text-[16px]`}>
+                      {`Jumlah : ${
+                        transList.transaction_quantity
+                      } x ${helper.rupiahCurrency(
+                        transList.transaction_product_price
+                      )}`}
+                    </div>
                   </div>
                 </div>
               </React.Fragment>
             ))}
 
             <hr className={`my-3 border-black`} />
-            <div className={`w-full h-[4rem] flex justify-between`}>
-              <div className={`w-[25%] border border-blue-600 rounded-md`}>
+            <div
+              className={`w-full relative mobile-s:h-auto tablet:h-[4rem] mobile-s:block tablet:flex justify-between`}
+            >
+              <div
+                className={`w-auto px-[1rem] border border-blue-600 rounded-md`}
+              >
                 <div className={`m-2 block`}>
                   <div className={`font-bold`}>Total Harga</div>
                   <div>
@@ -223,7 +231,7 @@ const CardProductTransaction = ({ transaction }) => {
                 </div>
               </div>
               <div
-                className={`w-[25%] h-[3rem] flex mt-auto border border-blue-600 rounded-md cursor-pointer hover:bg-blue-800 hover:text-white`}
+                className={`w-auto px-[1rem] mobile-s:mt-3 h-[3rem] flex tablet:mt-auto border border-blue-600 rounded-md cursor-pointer hover:bg-blue-800 hover:text-white`}
                 onClick={() =>
                   router.push(
                     `/detail-transaction/${transaction.transaction_id}`
@@ -232,10 +240,12 @@ const CardProductTransaction = ({ transaction }) => {
               >
                 <div className={`flex m-auto`}>Rincian Pesanan</div>
               </div>
-              <div className={`w-[25%] border border-blue-600 rounded-md`}>
+              <div
+                className={`w-auto px-[1rem] mobile-s:mt-3 tablet:mt-0 border border-blue-600 rounded-md`}
+              >
                 <div className={`m-2 block`}>
                   <div className={`font-bold`}>Status</div>
-                  <div>
+                  <div className={`mobile-s:text-[14px]`}>
                     {transactionStatus == "pending"
                       ? "Menunggu Konfirmasi Penjual"
                       : transactionStatus == "processed"
@@ -338,20 +348,22 @@ const CardProductTransaction = ({ transaction }) => {
               {transactionStatus == "pending" ||
               transactionStatus == "processed" ? (
                 <>
-                  <div
-                    className={`w-[2.5rem] h-[2.5rem] flex mt-auto border rounded-md
-                bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer`}
-                    onClick={() => {
-                      otherButton === false
-                        ? setOtherButton(true)
-                        : setOtherButton(false);
-                    }}
-                  >
-                    <img
-                      src="/navigationbar/navbar-white.png"
-                      className="flex m-auto w-[2rem] h-[2rem]"
-                      alt=""
-                    />
+                  <div className={`flex justify-end`}>
+                    <div
+                      className={`w-[2.5rem] h-[2.5rem] mobile-s:mt-3 tablet:mt-auto border rounded-md
+                      bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer`}
+                      onClick={() => {
+                        otherButton === false
+                          ? setOtherButton(true)
+                          : setOtherButton(false);
+                      }}
+                    >
+                      <img
+                        src="/navigationbar/navbar-white.png"
+                        className="flex mx-auto mt-[3px] w-[2rem] h-[2rem]"
+                        alt=""
+                      />
+                    </div>
                   </div>
                 </>
               ) : null}
@@ -360,9 +372,9 @@ const CardProductTransaction = ({ transaction }) => {
               <div
                 className={`absolute ${
                   otherButton == true ? "block" : "hidden"
-                } z-50 text-base list-none bg-white rounded
-                        divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600
-                        hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 hover:text-white cursor-pointer`}
+                } z-50 text-base list-none rounded
+                        divide-y divide-gray-100 shadow bg-blue-700
+                        hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 text-white cursor-pointer`}
               >
                 <div className={`py-1`}>
                   <div

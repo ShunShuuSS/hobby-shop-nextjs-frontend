@@ -185,10 +185,10 @@ const FormEditProfile = ({ setModal, userInfo }) => {
   return (
     <>
       <div
-        className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center"
+        className="flex h-full overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center"
         style={{ backgroundColor: "rgba(128, 128, 128, 0.5)" }}
       >
-        <div className="relative p-4 w-full max-w-md h-full md:h-auto">
+        <div className="relative p-4 w-full max-w-md h-full md:h-auto mobile-s:pt-[10rem] tablet:pt-0">
           <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div className="flex justify-end p-2">
               <button

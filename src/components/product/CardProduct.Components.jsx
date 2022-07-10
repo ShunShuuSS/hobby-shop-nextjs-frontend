@@ -79,7 +79,7 @@ const CardProduct = ({
 
           <div className={`m-1`}>
             <div
-              className={`titext-[13px] break-words whitespace-normal overflow-hidden webkit-box webkit-box-vertical webkit-line-clamp-2 text-ellipsistle`}
+              className={`text-[13px] break-words whitespace-normal overflow-hidden webkit-box webkit-box-vertical webkit-line-clamp-2 text-ellipsistle`}
               title={product_name}
             >
               {product_name}

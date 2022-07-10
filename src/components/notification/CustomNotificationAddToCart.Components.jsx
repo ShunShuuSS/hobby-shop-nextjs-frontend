@@ -7,7 +7,6 @@ import UserContext from "../../context/user.context";
 import CardProduct from "../product/CardProduct.Components";
 
 const CustomNotificationAddToCart = ({
-  
   productName,
   setOpenModalAddToCart,
 }) => {
@@ -96,10 +95,10 @@ const CustomNotificationAddToCart = ({
   return (
     <>
       <div
-        className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center"
+        className="flex h-full mobile-s:my-10 mobile-xl:mt-7 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center"
         style={{ backgroundColor: "rgba(128, 128, 128, 0.5)" }}
       >
-        <div className="relative p-4 w-full max-w-7xl h-full md:h-auto">
+        <div className="relative p-4 w-full">
           <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div className="flex justify-between p-2">
               <div className={`text-[20px] p-1.5`}>
@@ -127,7 +126,7 @@ const CustomNotificationAddToCart = ({
 
             <div className="overflow-y-auto max-h-[70vh] px-6 pb-4 space-y-6 lg:px-8 sm:pb-6 xl:pb-8">
               <div
-                className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-6`}
+                className={`grid gap-4 mobile-s:grid-cols-2 mobile-xl:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-5 laptop-l:grid-cols-6`}
               >
                 {recommendationProductLoadComplete ? (
                   <>

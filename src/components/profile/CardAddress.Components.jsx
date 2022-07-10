@@ -77,23 +77,27 @@ const CardAddress = ({ address }) => {
       {!deleteAddress ? (
         <>
           <div
-            className={`w-full p-2 flex justify-between border rounded-md mb-5 border-black bg-white`}
+            className={`w-full p-2 mobile-xl:flex mobile-s:block justify-between border rounded-md mb-5 border-black bg-white`}
           >
             <div className={`block`}>
-              <div className={`font-bold text-[17px]`}>
+              <div
+                className={`font-bold mobile-s:text-[14px] mobile-xl:text-[17px]`}
+              >
                 {address.receiver_name} <span>({address.phone_number})</span>
               </div>
-              <div className={`text-[14px]`}>
+              <div className={`mobile-s:text-[12px] mobile-xl:text-[14px]`}>
                 {address.user_address_detail}, {address.kelurahan_name},{" "}
                 {address.kecamatan_name}, {address.kabupaten_name},{" "}
                 {address.provinsi_name}.
               </div>
-              <div className={`text-[14px]`}>{address.postal_code}</div>
-              <div className={`flex`}>
-                <div className={`flex justify-start mr-2`}>
+              <div className={`mobile-s:text-[12px] mobile-xl:text-[14px]`}>
+                {address.postal_code}
+              </div>
+              <div className={`flex mt-3`}>
+                <div className={`flex w-full justify-start`}>
                   <button
                     type="button"
-                    className={`flex justify-center w-[9rem] h-[2.2rem] text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
+                    className={`flex justify-center mobile-s:w-full mobile-xl:w-[9rem] h-[2.2rem] text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
                     onClick={() => deleteUserAddress()}
                   >
                     {loadingDelete ? (
@@ -116,7 +120,11 @@ const CardAddress = ({ address }) => {
                         </svg>
                       </>
                     ) : (
-                      "Hapus Alamat"
+                      <>
+                        <div className={`mobile-s:text-xs mobile-xl:text-sm`}>
+                          Hapus Alamat
+                        </div>
+                      </>
                     )}
                   </button>
                 </div>
@@ -139,15 +147,21 @@ const CardAddress = ({ address }) => {
                 ) : null}
               </div>
             </div>
-            <div className={`block my-auto`}>
+            <div className={`block mobile-s:mt-3 mobile-xl:my-auto`}>
               <div className={`flex`}>
                 {UserUseAddress === address.user_address_id ? (
-                  <>Alamat telah digunakan</>
+                  <>
+                    <div
+                      className={`mobile-s:text-xs mobile-s:mx-auto mobile-xl:text-sm`}
+                    >
+                      Alamat telah digunakan
+                    </div>
+                  </>
                 ) : (
                   <>
                     <button
                       type="button"
-                      className={`block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
+                      className={`mobile-s:w-full mobile-xl:w-auto block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg mobile-s:text-xs mobile-xl:text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
                       onClick={() => changeUserUseAddress()}
                     >
                       Pakai alamat ini
