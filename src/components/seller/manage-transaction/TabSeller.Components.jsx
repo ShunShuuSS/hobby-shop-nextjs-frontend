@@ -60,7 +60,7 @@ const TabSeller = ({ children }) => {
             </div>
           </div>
         </div>
-        <div className={`w-auto mobile-s:mt-5 laptop:mt-0`}>{children}</div>
+        <div className={`w-full mobile-s:mt-5 laptop:mt-0`}>{children}</div>
       </div>
     </>
   );

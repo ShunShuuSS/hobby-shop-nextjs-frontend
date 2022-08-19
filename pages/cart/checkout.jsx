@@ -15,6 +15,8 @@ const CheckOutPage = () => {
   const cartContext = useContext(CartContext);
   const userContext = useContext(UserContext);
 
+  const [ongkos, setOngkos] = useState(0);
+
   const [productData, setProductData] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalProduct, setTotalProduct] = useState(0);
@@ -41,6 +43,7 @@ const CheckOutPage = () => {
     } else {
       if (userContext.CompleteLoad === true) {
         if (userContext.UserToken !== "") {
+          // getOngkos();
           CheckedProductInCartDataApi();
         } else {
           router.push("/login");
@@ -62,6 +65,9 @@ const CheckOutPage = () => {
           })
         ).data.data;
 
+        const ongkosData = await axios.get(`api/transaction/getOngkos`);
+        setOngkos(ongkosData.data.data.harga);
+
         if (getData.length) {
           setProductData(getData);
 
@@ -71,6 +77,7 @@ const CheckOutPage = () => {
             totalPrice += element.cart_quantity * element.product_price;
             totalProduct += element.cart_quantity;
           });
+          totalPrice += ongkosData.data.data.harga;
           setTotalPrice(totalPrice);
           setTotalProduct(totalProduct);
         }
@@ -79,6 +86,17 @@ const CheckOutPage = () => {
       }
     }
   };
+
+  // const getOngkos = async () => {
+  //   try {
+  //     const ongkos = await axios.get(`api/transaction/getOngkos`);
+
+  //     if (ongkos.data.data) {
+  //       console.log(ongkos.data.data);
+  //       setOngkos(ongkos.data.data.harga);
+  //     }
+  //   } catch (error) {}
+  // };
 
   const AddNewTransaction = async () => {
     const receiver_address = userContext.UserInfo.user_address_detail.concat(
@@ -103,6 +121,7 @@ const CheckOutPage = () => {
           receiver_name: userContext.UserInfo.receiver_name,
           receiver_phone: userContext.UserInfo.phone_number,
           receiver_address: receiver_address,
+          ongkos: ongkos,
         },
         {
           headers: {
@@ -110,6 +129,8 @@ const CheckOutPage = () => {
           },
         }
       );
+
+      console.log(addNewTransaction);
 
       if (addNewTransaction.data.data.affectedRows) {
         setNotifOrder({ success: true });
@@ -309,6 +330,11 @@ const CheckOutPage = () => {
               <div className={`flex justify-between`}>
                 <div className={``}>Jumlah Produk</div>
                 <div className={``}>{totalProduct}</div>
+              </div>
+
+              <div className={`flex justify-between`}>
+                <div className={``}>Ongkos</div>
+                <div className={``}>{helper.rupiahCurrency(ongkos)}</div>
               </div>
               <hr className={`border-black`} />
               <div className={`flex justify-between`}>

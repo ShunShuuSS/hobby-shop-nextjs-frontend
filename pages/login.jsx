@@ -21,7 +21,7 @@ const Login = () => {
 
   useEffect(() => {
     if (userContext.UserToken !== "") {
-      Router.push(userContext.LastPage);
+      Router.push("/");
     }
   }, [userContext.UserToken]);
 

@@ -122,14 +122,14 @@ const DetailTransaction = () => {
                 </div>
               </div>
             </div>
-            <hr className={`my-3 w-full`} />
+            <hr className={`my-3 w-full border-black`} />
             <div className={`flex justify-between`}>
               <div className={`w-[50%]`}>Informasi Produk</div>
               <div className={`w-[10%] text-right`}>Jumlah</div>
               <div className={`w-[15%] text-right`}>Harga Satuan</div>
               <div className={`w-[20%] text-right`}>Total Harga</div>
             </div>
-            <hr className={`my-3`} />
+            <hr className={`my-3 border-black`} />
             <div className={`block`}>
               {transactionData.transaction_list.map((product) => (
                 <React.Fragment key={product.transaction_list_id}>
@@ -161,9 +161,14 @@ const DetailTransaction = () => {
                 </React.Fragment>
               ))}
 
-              <hr className={`my-3`} />
+              <hr className={`my-3 border-black`} />
             </div>
-
+            <div className={`flex justify-end`}>
+              <div className={`w-[10rem] font-bold`}>Ongkos</div>
+              <div className={`w-[15rem] text-right`}>
+                {helper.rupiahCurrency(transactionData.ongkos)}
+              </div>
+            </div>
             <div className={`flex justify-end`}>
               <div className={`w-[10rem] font-bold`}>Total Transaksi</div>
               <div className={`w-[15rem] text-right`}>
